@@ -146,6 +146,8 @@ To understand the configuration of Spring MVC, the generated Spring MVC configur
                 <bean
                     class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver" />
             </mvc:argument-resolvers>
+            <!-- workarround to CVE-2016-5007. -->
+            <mvc:path-matching path-matcher="pathMatcher" />
         </mvc:annotation-driven>
 
         <mvc:default-servlet-handler />
@@ -210,7 +212,8 @@ To understand the configuration of Spring MVC, the generated Spring MVC configur
 
         <!-- Setting Exception Handling. -->
         <!-- Exception Resolver. -->
-        <bean class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
+        <bean id="systemExceptionResolver"
+            class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
             <property name="exceptionCodeResolver" ref="exceptionCodeResolver" />
             <!-- Setting and Customization by project. -->
             <property name="order" value="3" />
@@ -242,6 +245,11 @@ To understand the configuration of Spring MVC, the generated Spring MVC configur
             <aop:advisor advice-ref="handlerExceptionResolverLoggingInterceptor"
                 pointcut="execution(* org.springframework.web.servlet.HandlerExceptionResolver.resolveException(..))" />
         </aop:config>
+
+        <!-- Setting PathMatcher. -->
+        <bean id="pathMatcher" class="org.springframework.util.AntPathMatcher">
+            <property name="trimTokens" value="false" />
+        </bean>
 
     </beans>
 
