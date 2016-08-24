@@ -3319,6 +3319,11 @@ web.xml
         <session-config>
             <!-- 30min -->
             <session-timeout>30</session-timeout>
+            <cookie-config>
+                <http-only>true</http-only>
+                <!-- <secure>true</secure> -->
+            </cookie-config>
+            <tracking-mode>COOKIE</tracking-mode>
         </session-config>
 
     </web-app>
@@ -3739,8 +3744,11 @@ MyBatis3用のブランクプロジェクトを作成した場合、以下のよ
         <!--
                 <setting name="defaultExecutorType" value="REUSE" />
                 <setting name="jdbcTypeForNull" value="NULL" />
-                <setting name="proxyFactory" value="JAVASSIST" />
                 <setting name="localCacheScope" value="STATEMENT" />
+        -->
+        <!-- Defaul value for proxyFactory has chenged to JAVASSIST since mybatis 3.3.0 .
+             To use CGLIB as a proxyFactory, remove this comment and add dependency for CGLIB in pom.xml
+                <setting name="proxyFactory" value="CGLIB" />
         -->
             </settings>
 
@@ -4013,6 +4021,8 @@ spring-mvc.xml
                 <bean
                     class="org.springframework.security.web.bind.support.AuthenticationPrincipalArgumentResolver" />
             </mvc:argument-resolvers>
+            <!-- workarround to CVE-2016-5007. -->
+            <mvc:path-matching path-matcher="pathMatcher" />
         </mvc:annotation-driven>
 
         <mvc:default-servlet-handler />
@@ -4111,6 +4121,11 @@ spring-mvc.xml
             <aop:advisor advice-ref="handlerExceptionResolverLoggingInterceptor"
                 pointcut="execution(* org.springframework.web.servlet.HandlerExceptionResolver.resolveException(..))" />
         </aop:config>
+
+        <!-- Setting PathMatcher. -->
+        <bean id="pathMatcher" class="org.springframework.util.AntPathMatcher">
+            <property name="trimTokens" value="false" />
+        </bean>
 
     </beans>
 
