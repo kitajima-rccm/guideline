@@ -3212,9 +3212,6 @@ Following settings are done in created blank project :file:`src/main/webapp/WEB-
         <listener>
             <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
         </listener>
-        <listener>
-            <listener-class>org.terasoluna.gfw.web.logging.HttpSessionEventLoggingListener</listener-class>
-        </listener>
         <context-param>
             <param-name>contextConfigLocation</param-name>
             <!-- Root ApplicationContext -->
@@ -3223,6 +3220,10 @@ Following settings are done in created blank project :file:`src/main/webapp/WEB-
                 classpath*:META-INF/spring/spring-security.xml
             </param-value>
         </context-param>
+
+        <listener>
+            <listener-class>org.terasoluna.gfw.web.logging.HttpSessionEventLoggingListener</listener-class>
+        </listener>
 
         <!-- (3) -->
         <filter>
@@ -3326,6 +3327,11 @@ Following settings are done in created blank project :file:`src/main/webapp/WEB-
         <session-config>
             <!-- 30min -->
             <session-timeout>30</session-timeout>
+            <cookie-config>
+                <http-only>true</http-only>
+                <!-- <secure>true</secure> -->
+            </cookie-config>
+            <tracking-mode>COOKIE</tracking-mode>
         </session-config>
 
     </web-app>
@@ -3477,10 +3483,8 @@ Perform entire Todo application related settings in the \ :file:`applicationCont
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-        xmlns:aop="http://www.springframework.org/schema/aop"
         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
         <!-- (1) -->
         <import resource="classpath:/META-INF/spring/todo-domain.xml" />
@@ -3492,7 +3496,7 @@ Perform entire Todo application related settings in the \ :file:`applicationCont
             location="classpath*:/META-INF/spring/*.properties" />
 
         <!-- (3) -->
-        <bean class="org.dozer.spring.DozerBeanMapperFactoryBean">
+        <bean id="beanMapper" class="org.dozer.spring.DozerBeanMapperFactoryBean">
             <property name="mappingFiles"
                 value="classpath*:/META-INF/dozer/**/*-mapping.xml" />
         </bean>
@@ -3743,10 +3747,10 @@ The following settings are done in created MyBatis3 project.
                 <setting name="mapUnderscoreToCamelCase" value="true" />
                 <setting name="lazyLoadingEnabled" value="true" />
                 <setting name="aggressiveLazyLoading" value="false" />
+                <setting name="defaultFetchSize" value="100" />
         <!--
                 <setting name="defaultExecutorType" value="REUSE" />
                 <setting name="jdbcTypeForNull" value="NULL" />
-                <setting name="proxyFactory" value="JAVASSIST" />
                 <setting name="localCacheScope" value="STATEMENT" />
         -->
             </settings>
@@ -3787,7 +3791,7 @@ The following settings are done in created JPA blank project.
         <import resource="classpath:/META-INF/spring/todo-env.xml" />
 
         <!-- (2) -->
-        <jpa:repositories base-package="todo.domain.repository"></jpa:repositories>
+        <jpa:repositories base-package="todo.domain.repository" />
 
         <!-- (3) -->
         <bean id="jpaVendorAdapter"
@@ -3797,9 +3801,8 @@ The following settings are done in created JPA blank project.
         </bean>
 
         <!-- (4) -->
-        <bean
-            class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-            id="entityManagerFactory">
+        <bean id="entityManagerFactory"
+            class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
             <!-- (5) -->
             <property name="packagesToScan" value="todo.domain.model" />
             <property name="dataSource" ref="dataSource" />
@@ -4019,6 +4022,8 @@ The Spring MVC related definitions are done in \ :file:`spring-mvc.xml`\.
                 <bean
                     class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver" />
             </mvc:argument-resolvers>
+            <!-- workarround to CVE-2016-5007. -->
+            <mvc:path-matching path-matcher="pathMatcher" />
         </mvc:annotation-driven>
 
         <mvc:default-servlet-handler />
@@ -4085,7 +4090,8 @@ The Spring MVC related definitions are done in \ :file:`spring-mvc.xml`\.
 
         <!-- Setting Exception Handling. -->
         <!-- Exception Resolver. -->
-        <bean class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
+        <bean id="systemExceptionResolver"
+            class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
             <property name="exceptionCodeResolver" ref="exceptionCodeResolver" />
             <!-- Setting and Customization by project. -->
             <property name="order" value="3" />
@@ -4117,6 +4123,11 @@ The Spring MVC related definitions are done in \ :file:`spring-mvc.xml`\.
             <aop:advisor advice-ref="handlerExceptionResolverLoggingInterceptor"
                 pointcut="execution(* org.springframework.web.servlet.HandlerExceptionResolver.resolveException(..))" />
         </aop:config>
+
+        <!-- Setting PathMatcher. -->
+        <bean id="pathMatcher" class="org.springframework.util.AntPathMatcher">
+            <property name="trimTokens" value="false" />
+        </bean>
 
     </beans>
 
@@ -4201,10 +4212,8 @@ The Spring Security related definitions are done in \ :file:`spring-security.xml
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sec="http://www.springframework.org/schema/security"
-        xmlns:context="http://www.springframework.org/schema/context"
         xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
-            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
         <sec:http pattern="/resources/**" security="none"/>
         <sec:http>
@@ -4215,9 +4224,9 @@ The Spring Security related definitions are done in \ :file:`spring-security.xml
             <sec:session-management />
         </sec:http>
 
-        <sec:authentication-manager></sec:authentication-manager>
+        <sec:authentication-manager />
 
-        <!-- Change View for CSRF or AccessDenied -->
+        <!-- CSRF Protection -->
         <bean id="accessDeniedHandler"
             class="org.springframework.security.web.access.DelegatingAccessDeniedHandler">
             <constructor-arg index="0">

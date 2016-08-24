@@ -1134,10 +1134,8 @@ Perform definitions related to Spring Security in \ ``spring-security.xml``\ .
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sec="http://www.springframework.org/schema/security"
-        xmlns:context="http://www.springframework.org/schema/context"
         xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
-            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
         <!-- (1) -->
         <sec:http pattern="/resources/**" security="none"/>
@@ -1161,10 +1159,10 @@ Perform definitions related to Spring Security in \ ``spring-security.xml``\ .
         </sec:http>
 
         <!-- (7) -->
-        <sec:authentication-manager></sec:authentication-manager>
+        <sec:authentication-manager />
 
         <!-- (4) -->
-        <!-- Change View for CSRF or AccessDenied -->
+        <!-- CSRF Protection -->
         <bean id="accessDeniedHandler"
             class="org.springframework.security.web.access.DelegatingAccessDeniedHandler">
             <constructor-arg index="0">
@@ -1279,6 +1277,8 @@ Description of settings not related to Spring Security is omitted.
                 <bean
                     class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver" />
             </mvc:argument-resolvers>
+            <!-- workarround to CVE-2016-5007. -->
+            <mvc:path-matching path-matcher="pathMatcher" />
         </mvc:annotation-driven>
 
         <mvc:default-servlet-handler />
@@ -1342,7 +1342,8 @@ Description of settings not related to Spring Security is omitted.
 
         <!-- Setting Exception Handling. -->
         <!-- Exception Resolver. -->
-        <bean class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
+        <bean id="systemExceptionResolver"
+            class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
             <property name="exceptionCodeResolver" ref="exceptionCodeResolver" />
             <!-- Setting and Customization by project. -->
             <property name="order" value="3" />
@@ -1374,6 +1375,11 @@ Description of settings not related to Spring Security is omitted.
             <aop:advisor advice-ref="handlerExceptionResolverLoggingInterceptor"
                 pointcut="execution(* org.springframework.web.servlet.HandlerExceptionResolver.resolveException(..))" />
         </aop:config>
+
+        <!-- Setting PathMatcher. -->
+        <bean id="pathMatcher" class="org.springframework.util.AntPathMatcher">
+            <property name="trimTokens" value="false" />
+        </bean>
 
     </beans>
 
