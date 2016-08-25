@@ -3410,7 +3410,7 @@ Tag library settings applied to all JSP are done in Include JSP.
 Following settings are done in created blank project \ :file:`src/main/webapp/WEB-INF/views/common/include.jsp`\.
 
 .. code-block:: jsp
-    :emphasize-lines: 1, 3, 6, 9, 13
+    :emphasize-lines: 1, 3, 6, 9, 11
 
     <!-- (1) -->
     <%@ page session="false"%>
@@ -3422,11 +3422,9 @@ Following settings are done in created blank project \ :file:`src/main/webapp/WE
     <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
     <!-- (4) -->
     <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
-    <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
-    <%@ taglib uri="http://tiles.apache.org/tags-tiles-extras" prefix="tilesx"%>
     <!-- (5) -->
-    <%@ taglib uri="http://terasoluna.org/tags" prefix="t"%>
     <%@ taglib uri="http://terasoluna.org/functions" prefix="f"%>
+    <%@ taglib uri="http://terasoluna.org/tags" prefix="t"%>
 
 .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
 .. list-table::
