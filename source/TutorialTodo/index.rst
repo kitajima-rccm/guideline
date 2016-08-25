@@ -3421,7 +3421,7 @@ web.xml
 作成したブランクプロジェクトの\ :file:`src/main/webapp/WEB-INF/views/common/include.jsp`\ は、以下のような設定となっている。
 
 .. code-block:: jsp
-    :emphasize-lines: 1, 3, 6, 9, 13
+    :emphasize-lines: 1, 3, 6, 9, 11
 
     <!-- (1) -->
     <%@ page session="false"%>
@@ -3433,11 +3433,9 @@ web.xml
     <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
     <!-- (4) -->
     <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
-    <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
-    <%@ taglib uri="http://tiles.apache.org/tags-tiles-extras" prefix="tilesx"%>
     <!-- (5) -->
-    <%@ taglib uri="http://terasoluna.org/tags" prefix="t"%>
     <%@ taglib uri="http://terasoluna.org/functions" prefix="f"%>
+    <%@ taglib uri="http://terasoluna.org/tags" prefix="t"%>
 
 .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
 .. list-table::
