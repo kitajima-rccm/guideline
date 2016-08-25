@@ -3200,7 +3200,7 @@ In \ :file:`web.xml`\, the settings are done for deploying the Todo application 
 Following settings are done in created blank project :file:`src/main/webapp/WEB-INF/web.xml`\.
 
 .. code-block:: xml
-    :emphasize-lines: 2, 6, 22, 78, 95, 106, 120
+    :emphasize-lines: 2, 8, 25, 81, 97, 108, 124
 
 
     <?xml version="1.0" encoding="UTF-8"?>
@@ -3276,10 +3276,12 @@ Following settings are done in created blank project :file:`src/main/webapp/WEB-
             <filter-name>springSecurityFilterChain</filter-name>
             <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
         </filter>
+
         <filter-mapping>
             <filter-name>springSecurityFilterChain</filter-name>
             <url-pattern>/*</url-pattern>
         </filter-mapping>
+
 
         <!-- (4) -->
         <servlet>
@@ -3408,7 +3410,7 @@ Tag library settings applied to all JSP are done in Include JSP.
 Following settings are done in created blank project \ :file:`src/main/webapp/WEB-INF/views/common/include.jsp`\.
 
 .. code-block:: jsp
-    :emphasize-lines: 1, 3, 6, 9, 11
+    :emphasize-lines: 1, 3, 6, 9, 13
 
     <!-- (1) -->
     <%@ page session="false"%>
@@ -3420,9 +3422,11 @@ Following settings are done in created blank project \ :file:`src/main/webapp/WE
     <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
     <!-- (4) -->
     <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+    <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+    <%@ taglib uri="http://tiles.apache.org/tags-tiles-extras" prefix="tilesx"%>
     <!-- (5) -->
-    <%@ taglib uri="http://terasoluna.org/functions" prefix="f"%>
     <%@ taglib uri="http://terasoluna.org/tags" prefix="t"%>
+    <%@ taglib uri="http://terasoluna.org/functions" prefix="f"%>
 
 .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
 .. list-table::
@@ -3587,7 +3591,7 @@ Perform the domain layer related settings of the Todo application in \ :file:`to
 | In addition, a description of the components that are not used in the tutorial are omitted.
 
 .. code-block:: xml
-    :emphasize-lines: 9-10, 13-14
+    :emphasize-lines: 12-13, 16-17
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -3681,7 +3685,7 @@ todo-infra.xml of blank project created for MyBatis3
 The following settings are done in created MyBatis3 project.
 
 .. code-block:: xml
-   :emphasize-lines: 11-12, 14-16, 17-18, 19-20, 23-25
+   :emphasize-lines: 10-11, 13-15, 16-17, 18-19, 22-24
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -3785,7 +3789,7 @@ todo-infra.xml of blank project created for JPA
 The following settings are done in created JPA blank project.
 
 .. code-block:: xml
-    :emphasize-lines: 9-10, 12-13, 15-17, 22-24, 26-27, 30-31
+    :emphasize-lines: 12-13, 15-16, 18-20, 25-27, 28-29, 32-33
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -3917,7 +3921,7 @@ Here, the file stored in the blank project for MyBatis3 is described as an examp
 Furthermore, the \ :file:`todo-env.xml` \ is not created while creating blank project that does not access the database.
 
 .. code-block:: xml
-    :emphasize-lines: 8, 22, 39
+    :emphasize-lines: 12, 27, 44
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -3925,8 +3929,8 @@ Furthermore, the \ :file:`todo-env.xml` \ is not created while creating blank pr
         xmlns:jdbc="http://www.springframework.org/schema/jdbc"
         xsi:schemaLocation="
             http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
-        >
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        ">
 
         <bean id="dateFactory" class="org.terasoluna.gfw.common.date.jodatime.DefaultJodaTimeDateFactory" />
 
@@ -4013,7 +4017,7 @@ The Spring MVC related definitions are done in \ :file:`spring-mvc.xml`\.
 | In addition, a description of the components that are not used in the tutorial are omitted.
 
 .. code-block:: xml
-    :emphasize-lines: 12, 16, 28, 31, 37, 71
+    :emphasize-lines: 15, 19, 33, 36, 42, 76
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"

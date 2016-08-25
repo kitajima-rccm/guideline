@@ -465,16 +465,16 @@ As a result, database initialization is necessary by executing SQL at the time o
 | ``src/main/resources/META-INF/spring/first-springsecurity-env.xml``
 
 .. code-block:: xml
-    :emphasize-lines: 3,6,44-49
+    :emphasize-lines: 30,33,35
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:jdbc="http://www.springframework.org/schema/jdbc"
         xsi:schemaLocation="
-            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd"
+            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        >
+        ">
 
         <bean id="dateFactory" class="org.terasoluna.gfw.common.date.jodatime.DefaultJodaTimeDateFactory" />
 
@@ -625,7 +625,7 @@ Following are URL patterns to be handled by the application created in this tuto
 | ``src/main/resources/META-INF/spring/spring-security.xml``
 
 .. code-block:: xml
-    :emphasize-lines: 22-23,27-28,32-33,34-35,42-47
+    :emphasize-lines: 12-15,16-19,23-25,31-33,34-35
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -644,7 +644,6 @@ Following are URL patterns to be handled by the application created in this tuto
                 authentication-failure-url="/login.jsp?error=true" />
             <!-- (2) -->
             <sec:logout
-                logout-url="/logout"
                 logout-success-url="/"
                 delete-cookies="JSESSIONID" />
             <sec:access-denied-handler ref="accessDeniedHandler"/>
@@ -653,7 +652,6 @@ Following are URL patterns to be handled by the application created in this tuto
             <!-- (3) -->
             <sec:intercept-url pattern="/login.jsp" access="permitAll" />
             <sec:intercept-url pattern="/**" access="isAuthenticated()" />
-
         </sec:http>
 
         <sec:authentication-manager>
@@ -667,7 +665,7 @@ Following are URL patterns to be handled by the application created in this tuto
             </sec:authentication-provider>
         </sec:authentication-manager>
 
-        <!-- Change View for CSRF or AccessDenied -->
+        <!-- CSRF Protection -->
         <bean id="accessDeniedHandler"
             class="org.springframework.security.web.access.DelegatingAccessDeniedHandler">
             <constructor-arg index="0">
@@ -1124,7 +1122,7 @@ Perform definitions related to Spring Security in \ ``spring-security.xml``\ .
 \ ``src/main/resources/META-INF/spring/spring-security.xml``\ of the blank project which has been created has following settings.
 
 .. code-block:: xml
-    :emphasize-lines: 9,12,14,16,18,20,24,27,60
+    :emphasize-lines: 10,13,15,17,19,21,25,28,61
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -1151,7 +1149,7 @@ Perform definitions related to Spring Security in \ ``spring-security.xml``\ .
         </sec:http>
 
         <!-- (7) -->
-        <sec:authentication-manager />
+        <sec:authentication-manager/>
 
         <!-- (4) -->
         <!-- CSRF Protection -->
@@ -1245,7 +1243,7 @@ Perform settings to link Spring Security and Spring MVC in \ ``spring-mvc.xml``\
 Description of settings not related to Spring Security is omitted.
 
 .. code-block:: xml
-    :emphasize-lines: 19-21,76-77
+    :emphasize-lines: 22-24,87-89
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
