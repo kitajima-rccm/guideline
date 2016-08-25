@@ -653,8 +653,8 @@ web.xmlの確認
     <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
     <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
     <!-- (5) -->
-    <%@ taglib uri="http://terasoluna.org/tags" prefix="t"%>
     <%@ taglib uri="http://terasoluna.org/functions" prefix="f"%>
+    <%@ taglib uri="http://terasoluna.org/tags" prefix="t"%>
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.80\linewidth}|
  .. list-table::
