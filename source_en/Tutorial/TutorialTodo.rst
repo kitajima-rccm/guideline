@@ -3205,9 +3205,11 @@ Following settings are done in created blank project :file:`src/main/webapp/WEB-
 
     <?xml version="1.0" encoding="UTF-8"?>
     <!-- (1) -->
-    <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    <web-app xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
         version="3.0">
+
         <!-- (2) -->
         <listener>
             <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -3274,12 +3276,10 @@ Following settings are done in created blank project :file:`src/main/webapp/WEB-
             <filter-name>springSecurityFilterChain</filter-name>
             <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
         </filter>
-
         <filter-mapping>
             <filter-name>springSecurityFilterChain</filter-name>
             <url-pattern>/*</url-pattern>
         </filter-mapping>
-
 
         <!-- (4) -->
         <servlet>
@@ -3292,7 +3292,6 @@ Following settings are done in created blank project :file:`src/main/webapp/WEB-
             </init-param>
             <load-on-startup>1</load-on-startup>
         </servlet>
-
         <servlet-mapping>
             <servlet-name>appServlet</servlet-name>
             <url-pattern>/</url-pattern>
@@ -3314,10 +3313,12 @@ Following settings are done in created blank project :file:`src/main/webapp/WEB-
             <error-code>500</error-code>
             <location>/WEB-INF/views/common/error/systemError.jsp</location>
         </error-page>
+
         <error-page>
             <error-code>404</error-code>
             <location>/WEB-INF/views/common/error/resourceNotFoundError.jsp</location>
         </error-page>
+
         <error-page>
             <exception-type>java.lang.Exception</exception-type>
             <location>/WEB-INF/views/common/error/unhandledSystemError.html</location>
@@ -3482,9 +3483,12 @@ Perform entire Todo application related settings in the \ :file:`applicationCont
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        ">
 
         <!-- (1) -->
         <import resource="classpath:/META-INF/spring/todo-domain.xml" />
@@ -3587,11 +3591,14 @@ Perform the domain layer related settings of the Todo application in \ :file:`to
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
         xmlns:aop="http://www.springframework.org/schema/aop"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+        ">
 
         <!-- (1) -->
         <import resource="classpath:META-INF/spring/todo-infra.xml" />
@@ -3603,11 +3610,11 @@ Perform the domain layer related settings of the Todo application in \ :file:`to
         <!-- AOP. -->
         <bean id="resultMessagesLoggingInterceptor"
             class="org.terasoluna.gfw.common.exception.ResultMessagesLoggingInterceptor">
-            <property name="exceptionLogger" ref="exceptionLogger" />
+              <property name="exceptionLogger" ref="exceptionLogger" />
         </bean>
         <aop:config>
             <aop:advisor advice-ref="resultMessagesLoggingInterceptor"
-                pointcut="@within(org.springframework.stereotype.Service)" />
+                         pointcut="@within(org.springframework.stereotype.Service)" />
         </aop:config>
 
     </beans>
@@ -3661,7 +3668,9 @@ Empty definition file is created as follows while creating blank project that do
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+        >
 
 
     </beans>
@@ -3676,13 +3685,12 @@ The following settings are done in created MyBatis3 project.
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-           xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="
-            http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://mybatis.org/schema/mybatis-spring
-            http://mybatis.org/schema/mybatis-spring.xsd">
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+        ">
 
          <!-- (1) -->
         <import resource="classpath:/META-INF/spring/todo-env.xml" />
@@ -3738,8 +3746,8 @@ The following settings are done in created MyBatis3 project.
 
         <?xml version="1.0" encoding="UTF-8" ?>
         <!DOCTYPE configuration
-          PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-          "http://mybatis.org/dtd/mybatis-3-config.dtd">
+            PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-config.dtd">
         <configuration>
 
             <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
@@ -3781,11 +3789,14 @@ The following settings are done in created JPA blank project.
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
         xmlns:util="http://www.springframework.org/schema/util"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-            http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+            http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+        ">
 
         <!-- (1) -->
         <import resource="classpath:/META-INF/spring/todo-env.xml" />
@@ -3911,7 +3922,11 @@ Furthermore, the \ :file:`todo-env.xml` \ is not created while creating blank pr
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+        >
 
         <bean id="dateFactory" class="org.terasoluna.gfw.common.date.jodatime.DefaultJodaTimeDateFactory" />
 
@@ -3929,10 +3944,17 @@ Furthermore, the \ :file:`todo-env.xml` \ is not created while creating blank pr
             <property name="maxWaitMillis" value="${cp.maxWait}" />
         </bean>
 
+
         <!-- (2) -->
         <bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
             <constructor-arg index="0" ref="realDataSource" />
         </bean>
+
+        <jdbc:initialize-database data-source="dataSource"
+            ignore-failures="ALL">
+            <jdbc:script location="classpath:/database/${database}-schema.sql" encoding="UTF-8" />
+            <jdbc:script location="classpath:/database/${database}-dataload.sql" encoding="UTF-8" />
+        </jdbc:initialize-database>
 
         <!--  REMOVE THIS LINE IF YOU USE JPA
         <bean id="transactionManager"
@@ -3940,12 +3962,6 @@ Furthermore, the \ :file:`todo-env.xml` \ is not created while creating blank pr
             <property name="entityManagerFactory" ref="entityManagerFactory" />
         </bean>
               REMOVE THIS LINE IF YOU USE JPA  -->
-        <!--  REMOVE THIS LINE IF YOU USE MyBatis2
-        <bean id="transactionManager"
-            class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-            <property name="dataSource" ref="dataSource" />
-        </bean>
-              REMOVE THIS LINE IF YOU USE MyBatis2  -->
         <!-- (3) -->
         <bean id="transactionManager"
             class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -4001,14 +4017,17 @@ The Spring MVC related definitions are done in \ :file:`spring-mvc.xml`\.
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-        xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xmlns:util="http://www.springframework.org/schema/util"
         xmlns:aop="http://www.springframework.org/schema/aop"
         xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        ">
 
         <!-- (1) -->
         <context:property-placeholder
@@ -4081,7 +4100,8 @@ The Spring MVC related definitions are done in \ :file:`spring-mvc.xml`\.
             class="org.terasoluna.gfw.web.mvc.support.CompositeRequestDataValueProcessor">
             <constructor-arg>
                 <util:list>
-                    <bean class="org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor" />
+                    <bean
+                        class="org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor" />
                     <bean
                         class="org.terasoluna.gfw.web.token.transaction.TransactionTokenRequestDataValueProcessor" />
                 </util:list>
@@ -4211,9 +4231,12 @@ The Spring Security related definitions are done in \ :file:`spring-security.xml
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sec="http://www.springframework.org/schema/security"
-        xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
-            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:sec="http://www.springframework.org/schema/security"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        ">
 
         <sec:http pattern="/resources/**" security="none"/>
         <sec:http>
