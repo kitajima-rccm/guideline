@@ -636,7 +636,7 @@ blankプロジェクトからの差分のみ説明する。
   SQLスクリプトの設定を追加する。
   
   .. code-block:: xml
-     :emphasize-lines: 29-30,31-32
+     :emphasize-lines: 3-5,29-33
   
       <?xml version="1.0" encoding="UTF-8"?>
       <beans xmlns="http://www.springframework.org/schema/beans"
