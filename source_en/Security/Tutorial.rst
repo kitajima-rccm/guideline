@@ -465,7 +465,7 @@ As a result, database initialization is necessary by executing SQL at the time o
 | ``src/main/resources/META-INF/spring/first-springsecurity-env.xml``
 
 .. code-block:: xml
-    :emphasize-lines: 3,6,44-49
+    :emphasize-lines: 4,6,30-36
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -625,7 +625,7 @@ Following are URL patterns to be handled by the application created in this tuto
 | ``src/main/resources/META-INF/spring/spring-security.xml``
 
 .. code-block:: xml
-    :emphasize-lines: 22-23,27-28,32-33,34-35,42-47
+    :emphasize-lines: 12-15,16-19,23-25,31-33,34-35
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -1122,7 +1122,7 @@ Perform definitions related to Spring Security in \ ``spring-security.xml``\ .
 \ ``src/main/resources/META-INF/spring/spring-security.xml``\ of the blank project which has been created has following settings.
 
 .. code-block:: xml
-    :emphasize-lines: 9,12,14,16,18,20,24,27,60
+    :emphasize-lines: 10,13,15,17,19,21,25,28,61
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -1243,7 +1243,7 @@ Perform settings to link Spring Security and Spring MVC in \ ``spring-mvc.xml``\
 Description of settings not related to Spring Security is omitted.
 
 .. code-block:: xml
-    :emphasize-lines: 19-21,76-77
+    :emphasize-lines: 22-24,87-89
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"

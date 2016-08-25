@@ -3212,7 +3212,7 @@ web.xml
 作成したブランクプロジェクトの\ :file:`src/main/webapp/WEB-INF/web.xml`\ は、以下のような設定となっている。
 
 .. code-block:: xml
-    :emphasize-lines: 2, 6, 22, 78, 95, 106, 120
+    :emphasize-lines: 2, 8, 25, 80, 96, 107, 123
 
 
     <?xml version="1.0" encoding="UTF-8"?>
@@ -3421,7 +3421,7 @@ web.xml
 作成したブランクプロジェクトの\ :file:`src/main/webapp/WEB-INF/views/common/include.jsp`\ は、以下のような設定となっている。
 
 .. code-block:: jsp
-    :emphasize-lines: 1, 3, 6, 9, 11
+    :emphasize-lines: 1, 3, 6, 9, 13
 
     <!-- (1) -->
     <%@ page session="false"%>
@@ -3433,9 +3433,11 @@ web.xml
     <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
     <!-- (4) -->
     <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+    <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+    <%@ taglib uri="http://tiles.apache.org/tags-tiles-extras" prefix="tilesx"%>
     <!-- (5) -->
-    <%@ taglib uri="http://terasoluna.org/functions" prefix="f"%>
     <%@ taglib uri="http://terasoluna.org/tags" prefix="t"%>
+    <%@ taglib uri="http://terasoluna.org/functions" prefix="f"%>
 
 .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
 .. list-table::
@@ -3492,7 +3494,7 @@ applicationContext.xml
 | なお、チュートリアルで使用しないコンポーネントについての説明は割愛する。
 
 .. code-block:: xml
-    :emphasize-lines: 9-10, 14-16, 18-19
+    :emphasize-lines: 10-11, 15-17, 19-20
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -3600,7 +3602,7 @@ todo-domain.xml
 | なお、チュートリアルで使用しないコンポーネントについての説明は割愛する。
 
 .. code-block:: xml
-    :emphasize-lines: 9-10, 13-14
+    :emphasize-lines: 12-13, 16-17
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -3693,7 +3695,7 @@ MyBatis3用のブランクプロジェクトを作成した場合のtodo-infra.x
 MyBatis3用のブランクプロジェクトを作成した場合、以下のような設定となっている。
 
 .. code-block:: xml
-   :emphasize-lines: 11-12, 14-16, 17-18, 19-20, 23-25
+   :emphasize-lines: 10-11, 13-15, 16-17, 18-19, 22-24
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -3797,7 +3799,7 @@ JPA用のブランクプロジェクトを作成した場合のtodo-infra.xml
 JPA用のブランクプロジェクトを作成した場合、以下のような設定となっている。
 
 .. code-block:: xml
-    :emphasize-lines: 9-10, 12-13, 15-17, 22-24, 26-27, 30-31
+    :emphasize-lines: 12-13, 15-16, 18-20, 25-27, 28-29, 32-33
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -3930,7 +3932,7 @@ todo-env.xml
 なお、データベースにアクセスしないブランクプロジェクトを作成した際は、\ :file:`todo-env.xml`\ は作成されない。
 
 .. code-block:: xml
-    :emphasize-lines: 8, 22, 39
+    :emphasize-lines: 12, 27, 44
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -4026,7 +4028,7 @@ spring-mvc.xml
 | なお、チュートリアルで使用しないコンポーネントについての説明は割愛する。
 
 .. code-block:: xml
-    :emphasize-lines: 12, 16, 28, 31, 37, 71
+    :emphasize-lines: 15, 19, 33, 36, 42, 76
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"

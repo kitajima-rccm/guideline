@@ -465,7 +465,7 @@ AccountSharedServiceの作成
 | ``src/main/resources/META-INF/spring/first-springsecurity-env.xml``
 
 .. code-block:: xml
-    :emphasize-lines: 3,6,44-49
+    :emphasize-lines: 4,6,30-36
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -627,7 +627,7 @@ Spring Securityの設定
 | ``src/main/resources/META-INF/spring/spring-security.xml``
 
 .. code-block:: xml
-    :emphasize-lines: 22-23,27-28,32-33,34-35,42-47
+    :emphasize-lines: 12-15,16-19,23-25,31-33,34-35
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -1123,7 +1123,7 @@ spring-security.xml
 作成したブランクプロジェクトの\ ``src/main/resources/META-INF/spring/spring-security.xml``\ は、以下のような設定となっている。
 
 .. code-block:: xml
-    :emphasize-lines: 9,12,14,16,18,20,24,27,60
+    :emphasize-lines: 10,13,15,17,19,21,25,28,61
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -1242,7 +1242,7 @@ spring-mvc.xml
 Spring Securityと関係のない設定については、説明を割愛する。
 
 .. code-block:: xml
-    :emphasize-lines: 19-21,76-77
+    :emphasize-lines: 22-24,87-89
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"

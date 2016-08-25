@@ -122,7 +122,7 @@ Following project is generated in the Package Explorer.
 To understand the configuration of Spring MVC, the generated Spring MVC configuration file (src/main/resources/META-INF/spring/spring-mvc.xml) is described briefly.
 
 .. code-block:: xml
-    :emphasize-lines: 15-16, 27-28, 67-73
+    :emphasize-lines: 18-19, 32-33, 73-77
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
