@@ -378,7 +378,7 @@ Mavenの設定
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.3.172</version>
-            <scope>compile</scope>
+            <scope>runtime</scope>
         </dependency>
 
 |
@@ -639,7 +639,7 @@ web.xmlの確認
 作成したブランクプロジェクトの\ :file:`src/main/webapp/WEB-INF/views/common/include.jsp`\は、以下のような設定となっている。
 
  .. code-block:: jsp
-    :emphasize-lines: 1, 3, 6, 9, 11 
+    :emphasize-lines: 1, 3, 6, 9, 12 
 
     <!-- (1) -->
     <%@ page session="false"%>
@@ -651,9 +651,10 @@ web.xmlの確認
     <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
     <!-- (4) -->
     <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+    <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
     <!-- (5) -->
-    <%@ taglib uri="http://terasoluna.org/functions" prefix="f"%>
     <%@ taglib uri="http://terasoluna.org/tags" prefix="t"%>
+    <%@ taglib uri="http://terasoluna.org/functions" prefix="f"%>
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.80\linewidth}|
  .. list-table::
@@ -818,7 +819,7 @@ todo-domain.xmlの確認
 | なお、チュートリアルで使用しないコンポーネントについての説明は割愛する。
 
  .. code-block:: xml
-    :emphasize-lines: 9-10, 12-13
+    :emphasize-lines: 9-10, 13-14
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -830,6 +831,7 @@ todo-domain.xmlの確認
 
         <!-- (1) -->
         <import resource="classpath:META-INF/spring/todo-infra.xml" />
+        <import resource="classpath*:META-INF/spring/**/*-codelist.xml" />
 
         <!-- (2) -->
         <context:component-scan base-package="todo.domain" />
@@ -907,7 +909,7 @@ JPA用のブランクプロジェクトを作成した場合
 JPA用のブランクプロジェクトを作成した場合、以下のような設定となっている。
 
  .. code-block:: xml
-    :emphasize-lines: 9-10, 12-13, 15-17, 22-24, 26-27, 30-31
+    :emphasize-lines: 9-10, 12-13, 15-17, 22-25, 26-27, 30-31
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -1125,12 +1127,15 @@ todo-env.xmlの確認
 作成したブランクプロジェクトの\ ``src/main/resources/META-INF/spring/todo-env.xml``\は、以下のような設定となっている。
 
  .. code-block:: xml
-    :emphasize-lines: 8-10, 22-25, 27-31
+    :emphasize-lines: 11-13, 26-29, 37-41
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+        xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+            http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
         <bean id="dateFactory" class="org.terasoluna.gfw.common.date.DefaultDateFactory" />
 
@@ -1148,10 +1153,17 @@ todo-env.xmlの確認
             <property name="maxWait" value="${cp.maxWait}" />
         </bean>
 
+
         <!-- (2) -->
         <bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
             <constructor-arg index="0" ref="realDataSource" />
         </bean>
+
+        <jdbc:initialize-database data-source="dataSource"
+            ignore-failures="ALL">
+            <jdbc:script location="classpath:/database/${database}-schema.sql" />
+            <jdbc:script location="classpath:/database/${database}-dataload.sql" />
+        </jdbc:initialize-database>
 
         <!-- (3) -->
         <bean id="transactionManager"
@@ -1219,7 +1231,7 @@ spring-mvc.xmlの確認
 | なお、チュートリアルで使用しないコンポーネントについての説明は割愛する。
 
  .. code-block:: xml
-    :emphasize-lines: 12-14, 16-22, 26-27, 29-32, 35-42, 61-67
+    :emphasize-lines: 12-14, 16-24, 28-29, 31-34, 37-44, 71-77
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -1242,6 +1254,8 @@ spring-mvc.xmlの確認
                 <bean
                     class="org.springframework.data.web.PageableHandlerMethodArgumentResolver" />
             </mvc:argument-resolvers>
+            <!-- workarround to CVE-2016-5007. -->
+            <mvc:path-matching path-matcher="pathMatcher" />
         </mvc:annotation-driven>
 
         <mvc:default-servlet-handler />
@@ -1269,6 +1283,14 @@ spring-mvc.xmlの確認
                 <mvc:exclude-mapping path="/**/*.html" />
                 <bean
                     class="org.terasoluna.gfw.web.token.transaction.TransactionTokenInterceptor" />
+            </mvc:interceptor>
+            <mvc:interceptor>
+                <mvc:mapping path="/**" />
+                <mvc:exclude-mapping path="/resources/**" />
+                <mvc:exclude-mapping path="/**/*.html" />
+                <bean class="org.terasoluna.gfw.web.codelist.CodeListInterceptor">
+                    <property name="codeListIdPattern" value="CL_.+" />
+                </bean>
             </mvc:interceptor>
             <!--  REMOVE THIS LINE IF YOU USE JPA
             <mvc:interceptor>
@@ -1334,6 +1356,11 @@ spring-mvc.xmlの確認
             <aop:advisor advice-ref="handlerExceptionResolverLoggingInterceptor"
                 pointcut="execution(* org.springframework.web.servlet.HandlerExceptionResolver.resolveException(..))" />
         </aop:config>
+
+        <!-- Setting PathMatcher. -->
+        <bean id="pathMatcher" class="org.springframework.util.AntPathMatcher">
+            <property name="trimTokens" value="false" />
+        </bean>
 
     </beans>
 
