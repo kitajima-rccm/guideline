@@ -2732,17 +2732,20 @@ Further, this file is provided in blank project also.
 - include.jsp
 
  .. code-block:: jsp
-    :emphasize-lines: 1,4,8
+    :emphasize-lines: 2,5,12
 
+    <%@ page session="false"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%> <%-- (1) --%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
     <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%> <%-- (2) --%>
     <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
     <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+    <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+    <%@ taglib uri="http://tiles.apache.org/tags-tiles-extras" prefix="tilesx"%>
 
-    <%@ taglib uri="http://terasoluna.org/functions" prefix="f"%> <%-- (3) --%>
     <%@ taglib uri="http://terasoluna.org/tags" prefix="t"%>
+    <%@ taglib uri="http://terasoluna.org/functions" prefix="f"%> <%-- (3) --%>
 
 - web.xml
 
