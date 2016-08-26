@@ -611,7 +611,7 @@ ControllerやJSP等のアプリケーション層でEntityのLazy Fetchを行う
 
 以下に ``OpenEntityManagerInViewInterceptor`` の設定例を示す。
 
-- spring-vmc.xml
+- spring-mvc.xml
 
  .. code-block:: xml
 
