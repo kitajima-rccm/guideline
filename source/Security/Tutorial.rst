@@ -465,14 +465,15 @@ AccountSharedServiceの作成
 | ``src/main/resources/META-INF/spring/first-springsecurity-env.xml``
 
 .. code-block:: xml
-    :emphasize-lines: 3,6,44-49
+    :emphasize-lines: 3-5,29-34
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
         xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+        xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+            http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
         <bean id="dateFactory" class="org.terasoluna.gfw.common.date.jodatime.DefaultJodaTimeDateFactory" />
 
@@ -489,9 +490,18 @@ AccountSharedServiceの作成
             <property name="maxWaitMillis" value="${cp.maxWait}" />
         </bean>
 
+
         <bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
             <constructor-arg index="0" ref="realDataSource" />
         </bean>
+
+        <!-- (1) -->
+        <jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
+            <!-- (2) -->
+            <jdbc:script location="classpath:/database/${database}-schema.sql" encoding="UTF-8" />
+            <!-- (3) -->
+            <jdbc:script location="classpath:/database/${database}-dataload.sql" encoding="UTF-8" />
+        </jdbc:initialize-database>
 
         <!--  REMOVE THIS LINE IF YOU USE JPA
         <bean id="transactionManager"
@@ -499,25 +509,12 @@ AccountSharedServiceの作成
             <property name="entityManagerFactory" ref="entityManagerFactory" />
         </bean>
               REMOVE THIS LINE IF YOU USE JPA  -->
-        <!--  REMOVE THIS LINE IF YOU USE MyBatis2
+        <!--  REMOVE THIS LINE IF YOU USE MyBatis3
         <bean id="transactionManager"
             class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
             <property name="dataSource" ref="dataSource" />
         </bean>
-              REMOVE THIS LINE IF YOU USE MyBatis2  -->
-        <bean id="transactionManager"
-            class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-            <property name="dataSource" ref="dataSource" />
-        </bean>
-
-        <!-- (1) -->
-        <jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
-            <!-- (2) -->
-            <jdbc:script location="classpath:/database/${database}-schema.sql" />
-            <!-- (3) -->
-            <jdbc:script location="classpath:/database/${database}-dataload.sql" />
-        </jdbc:initialize-database>
-
+              REMOVE THIS LINE IF YOU USE MyBatis3  -->
     </beans>
 
 .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
@@ -628,7 +625,7 @@ Spring Securityの設定
 | ``src/main/resources/META-INF/spring/spring-security.xml``
 
 .. code-block:: xml
-    :emphasize-lines: 22-23,27-28,32-33,34-35,42-47
+    :emphasize-lines: 22-23,27-28,32-34,41-46
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -678,7 +675,7 @@ Spring Securityの設定
             </sec:authentication-provider>
         </sec:authentication-manager>
 
-        <!-- Change View for CSRF or AccessDenied -->
+        <!-- CSRF Protection -->
         <bean id="accessDeniedHandler"
             class="org.springframework.security.web.access.DelegatingAccessDeniedHandler">
             <constructor-arg index="0">
@@ -865,8 +862,10 @@ Spring Securityの設定
     <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
     <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
     <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
-    <%@ taglib uri="http://terasoluna.org/functions" prefix="f"%>
+    <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+    <%@ taglib uri="http://tiles.apache.org/tags-tiles-extras" prefix="tilesx"%>
     <%@ taglib uri="http://terasoluna.org/tags" prefix="t"%>
+    <%@ taglib uri="http://terasoluna.org/functions" prefix="f"%>
 
 .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
 .. list-table::
@@ -1142,15 +1141,15 @@ spring-security.xml
 作成したブランクプロジェクトの\ ``src/main/resources/META-INF/spring/spring-security.xml``\ は、以下のような設定となっている。
 
 .. code-block:: xml
-    :emphasize-lines: 9,12,20,22,24,26,30,33,66
+    :emphasize-lines: 9,12,20,22,24,26,29,32,65
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sec="http://www.springframework.org/schema/security"
         xmlns:context="http://www.springframework.org/schema/context"
         xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
-            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+                    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
         <!-- (1) -->
         <sec:http pattern="/resources/**" security="none"/>
@@ -1172,12 +1171,11 @@ spring-security.xml
             <!-- (6) -->
             <sec:session-management />
         </sec:http>
-
         <!-- (7) -->
         <sec:authentication-manager></sec:authentication-manager>
 
         <!-- (4) -->
-        <!-- Change View for CSRF or AccessDenied -->
+        <!-- CSRF Protection -->
         <bean id="accessDeniedHandler"
             class="org.springframework.security.web.access.DelegatingAccessDeniedHandler">
             <constructor-arg index="0">
@@ -1269,7 +1267,7 @@ spring-mvc.xml
 Spring Securityと関係のない設定については、説明を割愛する。
 
 .. code-block:: xml
-    :emphasize-lines: 19-21,76-77
+    :emphasize-lines: 19-21,84-86
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -1341,15 +1339,22 @@ Spring Securityと関係のない設定については、説明を割愛する�
 
         <!-- Settings View Resolver. -->
         <mvc:view-resolvers>
+            <mvc:bean-name />
+            <mvc:tiles />
             <mvc:jsp prefix="/WEB-INF/views/" />
         </mvc:view-resolvers>
+
+        <mvc:tiles-configurer>
+            <mvc:definitions location="/WEB-INF/tiles/tiles-definitions.xml" />
+        </mvc:tiles-configurer>
 
         <bean id="requestDataValueProcessor"
             class="org.terasoluna.gfw.web.mvc.support.CompositeRequestDataValueProcessor">
             <constructor-arg>
                 <util:list>
                     <!-- (2) -->
-                    <bean class="org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor" />
+                    <bean
+                        class="org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor" />
                     <bean
                         class="org.terasoluna.gfw.web.token.transaction.TransactionTokenRequestDataValueProcessor" />
                 </util:list>
