@@ -2148,6 +2148,10 @@ Bean Validationのアノテーションの\ ``message``\ 属性に指定され�
 
   .. code-block:: properties
 
+    # this file contains the default messages of JSR 303 bean validation for validations provided in the common library
+
+    org.terasoluna.gfw.common.codelist.ExistInCodeList = Does not exist in {codeListId}
+
     javax.validation.constraints.NotNull.message=is required.
     # (1)
     javax.validation.constraints.Size.message=size is not in the range {min} through {max}.
@@ -2192,6 +2196,10 @@ Bean Validationのアノテーションの\ ``message``\ 属性に指定され�
   \ ``@NotNull``\ 、\ ``@Size``\ 、\ ``@Min``\ 、\ ``@Max``\ 、\ ``@Email``\ のエラーメッセージを変更する。
 
   .. code-block:: properties
+
+    # this file contains the default messages of JSR 303 bean validation for validations provided in the common library
+
+    org.terasoluna.gfw.common.codelist.ExistInCodeList = Does not exist in {codeListId}
 
     javax.validation.constraints.NotNull.message="{0}" is required.
     javax.validation.constraints.Size.message=The size of "{0}" is not in the range {min} through {max}.
@@ -3254,6 +3262,18 @@ application-messages.propertiesに以下の定義を行った場合、
 
 .. code-block:: properties
 
+  e.xx.fw.5001 = Resource not found.
+
+  e.xx.fw.7001 = Illegal screen flow detected!
+  e.xx.fw.7002 = CSRF attack detected!
+  
+  e.xx.fw.8001 = Business error occurred!
+  
+  e.xx.fw.9001 = System error occurred!
+  e.xx.fw.9002 = Data Access error!
+  
+  title.welcome.home = welcome home
+  
   # typemismatch
   typeMismatch="{0}" is invalid.
   typeMismatch.int="{0}" must be an integer.
@@ -3261,12 +3281,15 @@ application-messages.propertiesに以下の定義を行った場合、
   typeMismatch.float="{0}" must be a float.
   typeMismatch.long="{0}" must be a long.
   typeMismatch.short="{0}" must be a short.
+  typeMismatch.boolean="{0}" must be a boolean.
   typeMismatch.java.lang.Integer="{0}" must be an integer.
   typeMismatch.java.lang.Double="{0}" must be a double.
   typeMismatch.java.lang.Float="{0}" must be a float.
   typeMismatch.java.lang.Long="{0}" must be a long.
   typeMismatch.java.lang.Short="{0}" must be a short.
+  typeMismatch.java.lang.Boolean="{0}" is not a boolean.
   typeMismatch.java.util.Date="{0}" is not a date.
+  typeMismatch.java.lang.Enum="{0}" is not a valid value.
 
   # filed names
   name=Name
