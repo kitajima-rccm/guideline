@@ -1807,6 +1807,7 @@ Define the error code corresponding to the error messages of the processing resu
 ``src/main/resources/ValidationMessages.properties``
 
 .. code-block:: properties
+    :emphasize-lines: 11-12
 
     # this file contains the default messages of JSR 303 bean validation for validations provided in the common library
 
