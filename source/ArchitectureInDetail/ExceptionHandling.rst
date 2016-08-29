@@ -703,7 +703,9 @@ How to use
 - **applicationContext.xml**
 
  .. code-block:: xml
-    :emphasize-lines: 3,5,11,16-17
+    :emphasize-lines: 4-5,7,15,19-22
+
+    <!-- omitted -->
 
     <!-- Exception Code Resolver. -->
     <bean id="exceptionCodeResolver"
@@ -712,7 +714,9 @@ How to use
         <property name="exceptionMappings"> <!-- (2) -->
             <map>
                 <entry key="ResourceNotFoundException" value="e.xx.fw.5001" />
+                <entry key="InvalidTransactionTokenException" value="e.xx.fw.7001" />
                 <entry key="BusinessException" value="e.xx.fw.8001" />
+                <entry key=".DataAccessException" value="e.xx.fw.9002" />
             </map>
         </property>
         <property name="defaultExceptionCode" value="e.xx.fw.9001" /> <!-- (3) -->
@@ -723,6 +727,8 @@ How to use
         class="org.terasoluna.gfw.common.exception.ExceptionLogger"> <!-- (4) -->
         <property name="exceptionCodeResolver" ref="exceptionCodeResolver" /> <!-- (5) -->
     </bean>
+
+    <!-- omitted -->
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
  .. list-table::
@@ -768,7 +774,9 @@ How to use
  監視ログ用のログ定義を追加する。
 
  .. code-block:: xml
-    :emphasize-lines: 1,13-15
+    :emphasize-lines: 3,17-20
+
+    <!-- omitted -->
 
     <appender name="MONITORING_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> <!-- (1) -->
         <file>log/projectName-monitoring.log</file>
@@ -782,10 +790,14 @@ How to use
         </encoder>
     </appender>
 
+    <!-- omitted -->
+
     <logger name="org.terasoluna.gfw.common.exception.ExceptionLogger.Monitoring" additivity="false"> <!-- (2) -->
         <level value="error" /> <!-- (3) -->
         <appender-ref ref="MONITORING_LOG_FILE" /> <!-- (4) -->
     </logger>
+
+    <!-- omitted -->
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
  .. list-table::
@@ -875,19 +887,21 @@ ResultMessagesを保持する例外(BisinessException,ResourceNotFoundException)
 .. _exception-handling-how-to-use-service-pointcut-aop-label:
 
  .. code-block:: xml
-    :emphasize-lines: 3,4,10
+    :emphasize-lines: 4-5,6,9-10
 
-    <!-- interceptor bean. -->
+    <!-- omitted -->
+
+    <!-- AOP. -->
     <bean id="resultMessagesLoggingInterceptor"
-          class="org.terasoluna.gfw.common.exception.ResultMessagesLoggingInterceptor"> <!-- (1) -->
+        class="org.terasoluna.gfw.common.exception.ResultMessagesLoggingInterceptor"> <!-- (1) -->
           <property name="exceptionLogger" ref="exceptionLogger" /> <!-- (2) -->
     </bean>
-
-    <!-- setting AOP. -->
     <aop:config>
         <aop:advisor advice-ref="resultMessagesLoggingInterceptor"
                      pointcut="@within(org.springframework.stereotype.Service)" /> <!-- (3) -->
     </aop:config>
+
+    <!-- omitted -->
 
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
@@ -914,7 +928,19 @@ ResultMessagesを保持する例外(BisinessException,ResourceNotFoundException)
 - **spring-mvc.xml**
 
  .. code-block:: xml
-    :emphasize-lines: 3-4,6-7,15,23-24,29
+    :emphasize-lines: 4-5,15-16,18-19,27,35-36
+
+    <!-- omitted -->
+
+    <!-- Settings View Resolver. -->
+    <bean id="viewResolver"
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver"> <!-- (8) -->
+        <property name="prefix" value="/WEB-INF/views/" />
+        <property name="suffix" value=".jsp" />
+        <property name="order" value="2" />
+    </bean>
+
+    <!-- omitted -->
 
     <!-- Setting Exception Handling. -->
     <!-- Exception Resolver. -->
@@ -942,12 +968,8 @@ ResultMessagesを保持する例外(BisinessException,ResourceNotFoundException)
         <property name="defaultStatusCode" value="500" /> <!-- (7) -->
     </bean>
 
-    <!-- Settings View Resolver. -->
-    <bean id="viewResolver"
-        class="org.springframework.web.servlet.view.InternalResourceViewResolver"> <!-- (8) -->
-        <property name="prefix" value="/WEB-INF/views/" />
-        <property name="suffix" value=".jsp" />
-    </bean>
+    <!-- omitted -->
+
 
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
@@ -1000,7 +1022,9 @@ ResultMessagesを保持する例外(BisinessException,ResourceNotFoundException)
 - **spring-mvc.xml**
 
  .. code-block:: xml
-    :emphasize-lines: 3,4,8
+    :emphasize-lines: 5,6,10
+
+    <!-- omitted -->
 
     <!-- Setting AOP. -->
     <bean id="handlerExceptionResolverLoggingInterceptor"
@@ -1011,6 +1035,8 @@ ResultMessagesを保持する例外(BisinessException,ResourceNotFoundException)
         <aop:advisor advice-ref="handlerExceptionResolverLoggingInterceptor"
             pointcut="execution(* org.springframework.web.servlet.HandlerExceptionResolver.resolveException(..))" /> <!-- (3) -->
     </aop:config>
+
+    <!-- omitted -->
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
  .. list-table::

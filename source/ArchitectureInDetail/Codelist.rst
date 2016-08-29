@@ -930,6 +930,8 @@ BeanValidationや、メッセージ出力方法の詳細については、 :doc:
 
 .. code-block:: properties
 
+    # this file contains the default messages of JSR 303 bean validation for validations provided in the common library
+
     org.terasoluna.gfw.common.codelist.ExistInCodeList = Does not exist in {codeListId}
 
 .. note::

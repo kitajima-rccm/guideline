@@ -622,6 +622,8 @@ Spring Dataのページネーション機能を有効化するための設定
             <bean
                 class="org.springframework.data.web.PageableHandlerMethodArgumentResolver" />
         </mvc:argument-resolvers>
+        <!-- workarround to CVE-2016-5007. -->
+        <mvc:path-matching path-matcher="pathMatcher" />	
     </mvc:annotation-driven>
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
@@ -1022,6 +1024,13 @@ JSPの実装(基本編)
 
  .. code-block:: jsp
 
+    <%@ page session="false"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+    <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+    <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+    <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+    <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
     <%@ taglib uri="http://terasoluna.org/tags" prefix="t"%>       <%-- (1) --%>
     <%@ taglib uri="http://terasoluna.org/functions" prefix="f"%>  <%-- (2) --%>
 
