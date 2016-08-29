@@ -719,11 +719,12 @@ Definition of MDCFilter is added to the filter definition of web.xml.
         <filter-name>MDCClearFilter</filter-name>
         <filter-class>org.terasoluna.gfw.web.logging.mdc.MDCClearFilter</filter-class>
     </filter>
-
     <filter-mapping>
         <filter-name>MDCClearFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+    <!-- omitted -->
 
     <!-- (2) -->
     <filter>
@@ -856,9 +857,13 @@ The following should be added to web.xml.
 .. code-block:: xml
 
     <?xml version="1.0" encoding="UTF-8"?>
-    <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    <web-app xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
         version="3.0">
+
+        <!-- omitted -->
+
         <listener>
             <listener-class>org.terasoluna.gfw.web.logging.HttpSessionEventLoggingListener</listener-class>
         </listener>
@@ -902,9 +907,9 @@ When the process is terminated, View name returned by the Controller, attributes
         <mvc:interceptor>
             <mvc:mapping path="/**" />
             <mvc:exclude-mapping path="/resources/**" />
+            <mvc:exclude-mapping path="/**/*.html" />
             <bean
-                class="org.terasoluna.gfw.web.logging.TraceLoggingInterceptor">
-            </bean>
+                class="org.terasoluna.gfw.web.logging.TraceLoggingInterceptor" />
         </mvc:interceptor>
         <!-- omitted -->
     </mvc:interceptors>
@@ -922,6 +927,7 @@ The following settings should be performed if the threshold value is to be chang
         <mvc:interceptor>
             <mvc:mapping path="/**" />
             <mvc:exclude-mapping path="/resources/**" />
+            <mvc:exclude-mapping path="/**/*.html" />
             <bean
                 class="org.terasoluna.gfw.web.logging.TraceLoggingInterceptor">
                 <property name="warnHandlingNanos" value="#{10 * 1000 * 1000 * 1000}" />

@@ -165,11 +165,16 @@ If project is created from `blank project <https://github.com/terasolunaorg/tera
 
     <dependencies>
 
+        <!-- omitted -->
+
         <!-- (1) -->
         <dependency>
             <groupId>org.terasoluna.gfw</groupId>
-            <artifactId>terasoluna-gfw-jodatime</artifactId>
+            <artifactId>terasoluna-gfw-jodatime-dependencies</artifactId>
+            <type>pom</type>
         </dependency>
+
+        <!-- omitted -->
 
     </dependencies>
 

@@ -398,24 +398,29 @@ pom.xmlの設定
 `MyBatis3用のブランクプロジェクト <https://github.com/terasolunaorg/terasoluna-gfw-web-multi-blank#multi-blank-project-with-mybatis3>`_ \ からプロジェクトを生成した場合は、terasoluna-gfw-mybatis3-dependenciesへの依存関係は、設定済の状態である。
 
  .. code-block:: xml
-    :emphasize-lines: 22-27
+    :emphasize-lines: 27-32
 
     <?xml version="1.0" encoding="UTF-8"?>
-    <project xmlns="http://maven.apache.org/POM/4.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-            http://maven.apache.org/maven-v4_0_0.xsd">
-
+    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
         <modelVersion>4.0.0</modelVersion>
         <artifactId>projectName-domain</artifactId>
         <packaging>jar</packaging>
-
         <parent>
             <groupId>com.example</groupId>
             <artifactId>mybatis3-example-app</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>5.2.0-SNAPSHOT</version>
             <relativePath>../pom.xml</relativePath>
         </parent>
+
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </build>
 
         <dependencies>
         
@@ -431,8 +436,6 @@ pom.xmlの設定
             <!-- omitted -->
 
         </dependencies>
-
-        <!-- omitted -->
 
     </project>
 
@@ -522,19 +525,16 @@ MyBatis3とSpringを連携する場合、データソースはSpringのDIコン�
 - :file:`projectName-env/src/main/resources/META-INF/spring/projectName-env.xml`
 
  .. code-block:: xml
-    :emphasize-lines: 15-20
+    :emphasize-lines: 12-17
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:jee="http://www.springframework.org/schema/jee"
         xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-        xsi:schemaLocation="http://www.springframework.org/schema/jdbc
-            http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-            http://www.springframework.org/schema/jee
-            http://www.springframework.org/schema/jee/spring-jee.xsd
-            http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd">
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        ">
 
         <!-- omitted -->
 
@@ -582,22 +582,18 @@ MyBatis3とSpringを連携する場合、データソースはSpringのDIコン�
 - :file:`projectName-env/src/main/resources/META-INF/spring/projectName-env.xml`
 
  .. code-block:: xml
-    :emphasize-lines: 6,13-14,18-19
+    :emphasize-lines: 5,9,14-15
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:jee="http://www.springframework.org/schema/jee"
         xmlns:jdbc="http://www.springframework.org/schema/jdbc"
         xmlns:tx="http://www.springframework.org/schema/tx"
-        xsi:schemaLocation="http://www.springframework.org/schema/jdbc
-            http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-            http://www.springframework.org/schema/jee
-            http://www.springframework.org/schema/jee/spring-jee.xsd
-            http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/tx
-            http://www.springframework.org/schema/tx/spring-tx.xsd">
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        ">
 
         <!-- omitted -->
 
@@ -641,29 +637,29 @@ MyBatis3とSpringを連携する場合、MyBatis-Springのコンポーネント�
 - :file:`projectName-domain/src/main/resources/META-INF/spring/projectName-infra.xml`
 
  .. code-block:: xml
-    :emphasize-lines: 4,7-8,12-20,22-23
+    :emphasize-lines: 3,7,13-19,22-23
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans 
-            http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://mybatis.org/schema/mybatis-spring
-            http://mybatis.org/schema/mybatis-spring.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+        ">
 
         <import resource="classpath:/META-INF/spring/projectName-env.xml" />
 
+        <!-- define the SqlSessionFactory -->
         <!-- (1) -->
-        <bean id="sqlSessionFactory"
-            class="org.mybatis.spring.SqlSessionFactoryBean">
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
             <!-- (2) -->
             <property name="dataSource" ref="dataSource" />
             <!-- (3) -->
-            <property name="configLocation"
-                value="classpath:/META-INF/mybatis/mybatis-config.xml" />
+            <property name="configLocation" value="classpath:/META-INF/mybatis/mybatis-config.xml" />
         </bean>
 
+        <!-- scan for Mappers -->
         <!-- (4) -->
         <mybatis:scan base-package="com.example.domain.repository" />
 
@@ -757,17 +753,28 @@ MyBatis3の設定
 - ``projectName-domain/src/main/resources/META-INF/mybatis/mybatis-config.xml``
 
  .. code-block:: xml
+    :emphasize-lines: 12-13
 
     <?xml version="1.0" encoding="UTF-8" ?>
-    <!DOCTYPE configuration PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+    <!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
 
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
+            
+            <!-- omitted -->
+            
             <!-- (1) -->
             <setting name="defaultFetchSize" value="100" />
+            
+            <!-- omitted -->
+            
         </settings>
 
+        <!-- omitted -->
+        
     </configuration>
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.80\linewidth}|
@@ -863,17 +870,26 @@ TypeAliasの設定方法は以下の通り。
 - :file:`projectName-domain/src/main/resources/META-INF/mybatis/mybatis-config.xml`
 
  .. code-block:: xml
-    :emphasize-lines: 7-8
+    :emphasize-lines: 10-11
 
     <?xml version="1.0" encoding="UTF-8" ?>
     <!DOCTYPE configuration
-      PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-      "http://mybatis.org/dtd/mybatis-3-config.dtd">
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
+        
+        <!-- omitted -->
+        
         <typeAliases>
             <!-- (1) -->
             <package name="com.example.domain.model" />
+            
+            <!-- omitted -->
+            
         </typeAliases>
+        
+        <!-- omitted -->
+        
     </configuration>
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.80\linewidth}|
@@ -973,16 +989,27 @@ NULL値とJDBC型のマッピング設定
 - :file:`projectName-domain/src/main/resources/META-INF/mybatis/mybatis-config.xml`
 
  .. code-block:: xml
+    :emphasize-lines: 12-13
 
     <?xml version="1.0" encoding="UTF-8" ?>
-    <!DOCTYPE configuration PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+    <!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
 
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
+            
+            <!-- omitted -->
+            
             <!-- (1) -->
             <setting name="jdbcTypeForNull" value="NULL" />
+            
+            <!-- omitted -->
+            
         </settings>
+        
+        <!-- omitted -->
 
     </configuration>
 
@@ -1126,11 +1153,15 @@ MyBatis3でJSR-310 Date and Time APIから提供されている日付や時刻�
 - :file:`projectName-domain/src/main/resources/META-INF/mybatis/mybatis-config.xml`
 
  .. code-block:: xml
+    :emphasize-lines: 10-11
 
     <?xml version="1.0" encoding="UTF-8" ?>
-    <!DOCTYPE configuration PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+    <!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
+
+        <!-- omitted -->
 
         <typeHandlers>
             <!-- (1) -->
@@ -1177,23 +1208,22 @@ MyBatis3でJSR-310 Date and Time APIから提供されている日付や時刻�
     - :file:`projectName-domain/src/main/resources/META-INF/spring/projectName-infra.xml`
 
      .. code-block:: xml
-        :emphasize-lines: 16-20
+        :emphasize-lines: 15-19
 
         <?xml version="1.0" encoding="UTF-8"?>
         <beans xmlns="http://www.springframework.org/schema/beans"
-               xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
-               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:schemaLocation="http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/tx
-            http://www.springframework.org/schema/tx/spring-tx.xsd
-            http://mybatis.org/schema/mybatis-spring
-            http://mybatis.org/schema/mybatis-spring.xsd">
+            xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+            ">
+            
+            <import resource="classpath:/META-INF/spring/projectName-env.xml" />
 
             <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-                <property name="dataSource" ref="oracleDataSource" />
-                <property name="configLocation"
-                    value="classpath:/META-INF/mybatis/mybatis-config.xml" />
+                <property name="dataSource" ref="dataSource" />
+                <property name="configLocation" value="classpath:/META-INF/mybatis/mybatis-config.xml" />
                 <property name="typeHandlers">
                     <list>
                         <bean class="xxx.yyy.zzz.CustomTypeHandler" />
@@ -1615,18 +1645,24 @@ MyBatis設定ファイル(\ :file:`mybatis-config.xml`\)に以下の設定を追
 - :file:`projectName-domain/src/main/resources/META-INF/mybatis/mybatis-config.xml`
 
  .. code-block:: xml
-    :emphasize-lines: 8-9
+    :emphasize-lines: 9-10
 
     <?xml version="1.0" encoding="UTF-8" ?>
     <!DOCTYPE configuration
-      PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-      "http://mybatis.org/dtd/mybatis-3-config.dtd">
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
 
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
             <!-- (3) -->
             <setting name="mapUnderscoreToCamelCase" value="true" />
+            
+            <!-- omitted -->
+            
         </settings>
+        
+        <!-- omitted -->
 
     </configuration>
 
@@ -1811,13 +1847,19 @@ Entityの検索処理の実装方法の説明を読む前に、「:ref:`DataAcce
 
     <?xml version="1.0" encoding="UTF-8" ?>
     <!DOCTYPE configuration
-      PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-      "http://mybatis.org/dtd/mybatis-3-config.dtd">
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
 
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
             <setting name="mapUnderscoreToCamelCase" value="true" />
+            
+            <!-- omitted -->
+            
         </settings>
+        
+        <!-- omitted -->
 
     </configuration>
 
@@ -4770,8 +4812,27 @@ MyBatis3では、SQLに値を埋め込む仕組みとして、以下の2つの�
         <?xml version="1.0" encoding="UTF-8"?>
         <beans xmlns="http://www.springframework.org/schema/beans"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd">
+            xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            ">
+
+            <bean id="jdbcTemplateForCodeList" class="org.springframework.jdbc.core.JdbcTemplate">
+                <property name="dataSource" ref="dataSource" />
+                <property name="fetchSize" value="${codelist.jdbc.fetchSize:1000}" />
+            </bean>
+            
+            <bean id="AbstractJdbcCodeList"
+                  class="org.terasoluna.gfw.common.codelist.JdbcCodeList" abstract="true">
+                <property name="jdbcTemplate" ref="jdbcTemplateForCodeList" />
+            </bean>
+            
+            <!-- Example for usage of AbstractJdbcCodeList
+            <bean id="CL_SAMPLE" parent="AbstractJdbcCodeList">
+                <property name="querySql" value="SELECT code, code_name FROM t_sample_codes ORDER BY code" />
+                <property name="valueColumn" value="code" />
+                <property name="labelColumn" value="code_name" />
+            </bean>
+            -->
 
             <bean id="CL_DIRECTION" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
                 <property name="map">
@@ -5445,16 +5506,28 @@ MyBatisの動作(使い方)は変わらない。
 * :file:`projectName-domain/src/main/resources/META-INF/mybatis/mybatis-config.xml` に設定を追加する。
 
  .. code-block:: xml
+    :emphasize-lines: 12-13
 
     <?xml version="1.0" encoding="UTF-8" ?>
     <!DOCTYPE configuration
-            PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-            "http://mybatis.org/dtd/mybatis-3-config.dtd">
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
+    
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
+            
+            <!-- omitted -->
+            
             <!-- (1) -->
             <setting name="defaultExecutorType" value="REUSE"/>
+            
+            <!-- omitted -->
+            
         </settings>
+        
+        <!-- omitted -->
+        
     </configuration>
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.80\linewidth}|
@@ -5546,22 +5619,19 @@ RepositoryのBean定義を行えばよい。
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns:context="http://www.springframework.org/schema/context"
-           xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
-           xsi:schemaLocation="
-           http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context.xsd
-           http://mybatis.org/schema/mybatis-spring
-           http://mybatis.org/schema/mybatis-spring.xsd">
+        xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+        ">
+        
+        <import resource="classpath:/META-INF/spring/projectName-env.xml" />
 
-        <bean id="sqlSessionFactory"
-              class="org.mybatis.spring.SqlSessionFactoryBean">
-            <property name="dataSource" ref="dataSource"/>
-            <property name="configLocation"
-                      value="classpath:META-INF/mybatis/mybatis-config.xml"/>
+        <!-- define the SqlSessionFactory -->
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+            <property name="dataSource" ref="dataSource" />
+            <property name="configLocation" value="classpath:/META-INF/mybatis/mybatis-config.xml" />
         </bean>
 
         <!-- (1) -->
@@ -5685,22 +5755,19 @@ RepositoryのBean定義を行えばよい。
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns:context="http://www.springframework.org/schema/context"
-           xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
-           xsi:schemaLocation="
-           http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context.xsd
-           http://mybatis.org/schema/mybatis-spring
-           http://mybatis.org/schema/mybatis-spring.xsd">
+        xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+        ">
+        
+        <import resource="classpath:/META-INF/spring/projectName-env.xml" />
 
-        <bean id="sqlSessionFactory"
-              class="org.mybatis.spring.SqlSessionFactoryBean">
-            <property name="dataSource" ref="dataSource"/>
-            <property name="configLocation"
-                      value="classpath:META-INF/mybatis/mybatis-config.xml"/>
+        <!-- define the SqlSessionFactory -->
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+            <property name="dataSource" ref="dataSource" />
+            <property name="configLocation" value="classpath:/META-INF/mybatis/mybatis-config.xml" />
         </bean>
 
         <!-- ... -->
@@ -6515,13 +6582,11 @@ MyBatis3では、JDBCドライバから接続しているデータベースの�
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="
-            http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://mybatis.org/schema/mybatis-spring
-            http://mybatis.org/schema/mybatis-spring.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
         ">
 
         <import resource="classpath:/META-INF/spring/projectName-env.xml" />
@@ -6538,13 +6603,12 @@ MyBatis3では、JDBCドライバから接続しているデータベースの�
             </property>
         </bean>
 
-        <bean id="sqlSessionFactory"
-            class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- define the SqlSessionFactory -->
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
             <property name="dataSource" ref="dataSource" />
             <!-- (3) -->
             <property name="databaseIdProvider" ref="databaseIdProvider"/>
-            <property name="configLocation"
-                value="classpath:/META-INF/mybatis/mybatis-config.xml" />
+            <property name="configLocation" value="classpath:/META-INF/mybatis/mybatis-config.xml" />
         </bean>
 
         <mybatis:scan base-package="com.example.domain.repository" />
@@ -8051,16 +8115,28 @@ MyBatis3では、"Lazy Load"の使用有無を、
   MyBatis設定ファイル(:file:`projectName-domain/src/main/resources/META-INF/mybatis/mybatis-config.xml`)に指定する。
 
  .. code-block:: xml
+    :emphasize-lines: 12-13
 
     <?xml version="1.0" encoding="UTF-8" ?>
     <!DOCTYPE configuration
-            PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-            "http://mybatis.org/dtd/mybatis-3-config.dtd">
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
+    
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
+            
+            <!-- omitted -->
+            
             <!-- (1) -->
             <setting name="lazyLoadingEnabled" value="true"/>
+            
+            <!-- omitted -->
+            
         </settings>
+        
+        <!-- omitted -->
+        
     </configuration>
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.80\linewidth}|
@@ -8144,16 +8220,28 @@ MyBatis3では、"Lazy Load"を実行するタイミングを制御するため�
 MyBatis設定ファイル(:file:`projectName-domain/src/main/resources/META-INF/mybatis/mybatis-config.xml`)に指定する。
 
  .. code-block:: xml
+    :emphasize-lines: 12-13
 
     <?xml version="1.0" encoding="UTF-8" ?>
     <!DOCTYPE configuration
-            PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-            "http://mybatis.org/dtd/mybatis-3-config.dtd">
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
+    
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
+            
+            <!-- omitted -->
+            
             <!-- (1) -->
             <setting name="aggressiveLazyLoading" value="false"/>
+            
+            <!-- omitted -->
+            
         </settings>
+        
+        <!-- omitted -->
+        
     </configuration>
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.80\linewidth}|
