@@ -1653,27 +1653,21 @@ Settings for activating the Spring MVC components necessary for RESTful Web Serv
 - :file:`spring-mvc-rest.xml`
 
  .. code-block:: xml
-    :emphasize-lines: 22, 32-34, 39-41, 44-47, 51, 61, 65
+    :emphasize-lines: 16, 26-28, 33-35, 38-44, 52, 60, 145
 
     <?xml version="1.0" encoding="UTF-8"?>
-    <beans xmlns="http://www.springframework.org/schema/beans" 
+    <beans xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:context="http://www.springframework.org/schema/context"
         xmlns:mvc="http://www.springframework.org/schema/mvc"
         xmlns:util="http://www.springframework.org/schema/util"
         xmlns:aop="http://www.springframework.org/schema/aop"
-        xsi:schemaLocation="
-            http://www.springframework.org/schema/mvc
-            http://www.springframework.org/schema/mvc/spring-mvc.xsd
-            http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/util
-            http://www.springframework.org/schema/util/spring-util.xsd
-            http://www.springframework.org/schema/context
-            http://www.springframework.org/schema/context/spring-context.xsd
-            http://www.springframework.org/schema/aop
-            http://www.springframework.org/schema/aop/spring-aop.xsd
-    ">
+        xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        ">
 
         <!-- Load properties files for placeholder. -->
         <!-- (1) -->
@@ -1700,24 +1694,110 @@ Settings for activating the Spring MVC components necessary for RESTful Web Serv
             </mvc:message-converters>
             <!-- (4) -->
             <mvc:argument-resolvers>
-                <bean class="org.springframework.data.web.PageableHandlerMethodArgumentResolver" />
+                <bean
+                    class="org.springframework.data.web.PageableHandlerMethodArgumentResolver" />
+                <bean
+                    class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver" />
             </mvc:argument-resolvers>
+            <!-- workarround to CVE-2016-5007. -->
+            <mvc:path-matching path-matcher="pathMatcher" />
         </mvc:annotation-driven>
-        
+
+        <mvc:default-servlet-handler />
+
+        <!-- Scan & register components of RESTful Web Service. -->
+        <!-- (6) -->
+        <context:component-scan base-package="com.example.project.api" />
+
+        <mvc:resources mapping="/resources/**"
+            location="/resources/,classpath:META-INF/resources/"
+            cache-period="#{60 * 60}" />
+
         <!-- Register components of interceptor. -->
         <!-- (5) -->
         <mvc:interceptors>
             <mvc:interceptor>
                 <mvc:mapping path="/**" />
-                <bean class="org.terasoluna.gfw.web.logging.TraceLoggingInterceptor" />
+                <mvc:exclude-mapping path="/resources/**" />
+                <mvc:exclude-mapping path="/**/*.html" />
+                <bean
+                    class="org.terasoluna.gfw.web.logging.TraceLoggingInterceptor" />
             </mvc:interceptor>
-            <!-- omitted -->
+            <mvc:interceptor>
+                <mvc:mapping path="/**" />
+                <mvc:exclude-mapping path="/resources/**" />
+                <mvc:exclude-mapping path="/**/*.html" />
+                <bean
+                    class="org.terasoluna.gfw.web.token.transaction.TransactionTokenInterceptor" />
+            </mvc:interceptor>
+            <mvc:interceptor>
+                <mvc:mapping path="/**" />
+                <mvc:exclude-mapping path="/resources/**" />
+                <mvc:exclude-mapping path="/**/*.html" />
+                <bean class="org.terasoluna.gfw.web.codelist.CodeListInterceptor">
+                    <property name="codeListIdPattern" value="CL_.+" />
+                </bean>
+            </mvc:interceptor>
+            <!--  REMOVE THIS LINE IF YOU USE JPA
+            <mvc:interceptor>
+                <mvc:mapping path="/**" />
+                <mvc:exclude-mapping path="/resources/**" />
+                <mvc:exclude-mapping path="/**/*.html" />
+                <bean
+                    class="org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor" />
+            </mvc:interceptor>
+                REMOVE THIS LINE IF YOU USE JPA  -->
         </mvc:interceptors>
-    
-        <!-- Scan & register components of RESTful Web Service. -->
-        <!-- (6) -->
-        <context:component-scan base-package="com.example.project.api" />
 
+        <!-- Settings View Resolver. -->
+        <mvc:view-resolvers>
+            <mvc:bean-name />
+            <mvc:tiles />
+            <mvc:jsp prefix="/WEB-INF/views/" />
+        </mvc:view-resolvers>
+        
+        <mvc:tiles-configurer>
+            <mvc:definitions location="/WEB-INF/tiles/tiles-definitions.xml" />
+        </mvc:tiles-configurer>
+        
+        <bean id="requestDataValueProcessor"
+            class="org.terasoluna.gfw.web.mvc.support.CompositeRequestDataValueProcessor">
+            <constructor-arg>
+                <util:list>
+                    <bean
+                        class="org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor" />
+                    <bean
+                        class="org.terasoluna.gfw.web.token.transaction.TransactionTokenRequestDataValueProcessor" />
+                </util:list>
+            </constructor-arg>
+        </bean>
+        
+        <!-- Setting Exception Handling. -->
+        <!-- Exception Resolver. -->
+        <bean id="systemExceptionResolver"
+            class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
+            <property name="exceptionCodeResolver" ref="exceptionCodeResolver" />
+            <!-- Setting and Customization by project. -->
+            <property name="order" value="3" />
+            <property name="exceptionMappings">
+                <map>
+                    <entry key="ResourceNotFoundException" value="common/error/resourceNotFoundError" />
+                    <entry key="BusinessException" value="common/error/businessError" />
+                    <entry key="InvalidTransactionTokenException" value="common/error/transactionTokenError" />
+                    <entry key=".DataAccessException" value="common/error/dataAccessError" />
+                </map>
+            </property>
+            <property name="statusCodes">
+                <map>
+                    <entry key="common/error/resourceNotFoundError" value="404" />
+                    <entry key="common/error/businessError" value="409" />
+                    <entry key="common/error/transactionTokenError" value="409" />
+                    <entry key="common/error/dataAccessError" value="500" />
+                </map>
+            </property>
+            <property name="defaultErrorView" value="common/error/systemError" />
+            <property name="defaultStatusCode" value="500" />
+        </bean>
         <!-- Register components of AOP. -->
         <!-- (7) -->
         <bean id="handlerExceptionResolverLoggingInterceptor" 
@@ -1728,6 +1808,11 @@ Settings for activating the Spring MVC components necessary for RESTful Web Serv
             <aop:advisor advice-ref="handlerExceptionResolverLoggingInterceptor"
                 pointcut="execution(* org.springframework.web.servlet.HandlerExceptionResolver.resolveException(..))" />
         </aop:config>
+
+        <!-- Setting PathMatcher. -->
+        <bean id="pathMatcher" class="org.springframework.util.AntPathMatcher">
+            <property name="trimTokens" value="false" />
+        </bean>
 
     </beans>
 
