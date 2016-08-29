@@ -640,10 +640,8 @@ blankプロジェクトからの差分のみ説明する。
   
       <?xml version="1.0" encoding="UTF-8"?>
       <beans xmlns="http://www.springframework.org/schema/beans"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
-          xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
           xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-              http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
   
           <bean id="dateFactory" class="org.terasoluna.gfw.common.date.DefaultDateFactory" />
@@ -678,12 +676,10 @@ blankプロジェクトからの差分のみ説明する。
               <property name="entityManagerFactory" ref="entityManagerFactory" />
           </bean>
                 REMOVE THIS LINE IF YOU USE JPA  -->
-          <!--  REMOVE THIS LINE IF YOU USE MyBatis2
           <bean id="transactionManager"
               class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
               <property name="dataSource" ref="dataSource" />
           </bean>
-                REMOVE THIS LINE IF YOU USE MyBatis2  -->  
       </beans>
   
   

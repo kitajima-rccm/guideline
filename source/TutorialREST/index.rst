@@ -728,24 +728,6 @@ spring-mvc-rest.xmlの作成
             class="org.springframework.web.servlet.view.InternalResourceViewResolver">
             <property name="prefix" value="/WEB-INF/views/" />
             <property name="suffix" value=".jsp" />
-            <property name="order" value="2" />
-        </bean>
-
-        <bean
-            class="org.springframework.web.servlet.view.tiles2.TilesViewResolver">
-            <property name="order" value="1" />
-        </bean>
-        
-        <bean class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
-            <property name="definitions">
-                <list>
-                    <value>/WEB-INF/tiles/tiles-definitions.xml</value>
-                </list>
-            </property>
-        </bean>
-        
-        <bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
-            <property name="order" value="0" />
         </bean>
         
         <bean id="requestDataValueProcessor"
