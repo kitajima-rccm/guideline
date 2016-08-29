@@ -170,12 +170,16 @@ pom.xmlの設定
 
     <dependencies>
 
+        <!-- omitted -->
+
         <!-- (1) -->
         <dependency>
             <groupId>org.terasoluna.gfw</groupId>
             <artifactId>terasoluna-gfw-jodatime-dependencies</artifactId>
             <type>pom</type>
         </dependency>
+
+        <!-- omitted -->
 
     </dependencies>
 

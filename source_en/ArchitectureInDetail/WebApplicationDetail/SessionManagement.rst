@@ -717,7 +717,12 @@ Following are the settings to handle \ ``HttpSessionRequiredException``\  as cli
 
  .. code-block:: xml
 
-    <bean class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
+    <!-- omitted -->
+
+    <!-- Setting Exception Handling. -->
+    <!-- Exception Resolver. -->
+    <bean id="systemExceptionResolver"
+        class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
         <property name="exceptionCodeResolver" ref="exceptionCodeResolver" />
         <!-- ... -->
         <property name="exceptionMappings">
@@ -735,6 +740,8 @@ Following are the settings to handle \ ``HttpSessionRequiredException``\  as cli
         </property>
         <!-- ... -->
     </bean>
+
+    <!-- omitted -->
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
  .. list-table::
@@ -754,6 +761,8 @@ Following are the settings to handle \ ``HttpSessionRequiredException``\  as cli
 
  .. code-block:: xml
 
+    <!-- omitted -->
+
     <bean id="exceptionCodeResolver"
         class="org.terasoluna.gfw.common.exception.SimpleMappingExceptionCodeResolver">
         <!-- Setting and Customization by project. -->
@@ -765,6 +774,8 @@ Following are the settings to handle \ ``HttpSessionRequiredException``\  as cli
         </property>
         <property name="defaultExceptionCode" value="e.xx.0001" /> <!-- (8) -->
     </bean>
+
+    <!-- omitted -->
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
  .. list-table::

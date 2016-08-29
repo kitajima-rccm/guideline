@@ -746,7 +746,9 @@ Common Settings
  Add log definition for monitoring log.
 
  .. code-block:: xml
-    :emphasize-lines: 1,13-15
+    :emphasize-lines: 3,17-19
+
+    <!-- omitted -->
 
     <appender name="MONITORING_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> <!-- (1) -->
         <file>${app.log.dir:-log}/projectName-monitoring.log</file>
@@ -760,10 +762,14 @@ Common Settings
         </encoder>
     </appender>
 
+    <!-- omitted -->
+
     <logger name="org.terasoluna.gfw.common.exception.ExceptionLogger.Monitoring" additivity="false"> <!-- (2) -->
         <level value="error" /> <!-- (3) -->
         <appender-ref ref="MONITORING_LOG_FILE" /> <!-- (4) -->
     </logger>
+
+    <!-- omitted -->
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
  .. list-table::
@@ -793,7 +799,9 @@ Common Settings
  Add log definition for application log.
 
  .. code-block:: xml
-    :emphasize-lines: 1,13
+    :emphasize-lines: 3,17-19,25
+
+    <!-- omitted -->
 
     <appender name="APPLICATION_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> <!-- (1) -->
         <file>${app.log.dir:-log}/projectName-application.log</file>
@@ -807,14 +815,20 @@ Common Settings
         </encoder>
     </appender>
 
+    <!-- omitted -->
+
     <logger name="org.terasoluna.gfw.common.exception.ExceptionLogger"> <!-- (2) -->
         <level value="info" /> <!-- (3) -->
     </logger>
+
+    <!-- omitted -->
 
     <root level="warn">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="APPLICATION_LOG_FILE" /> <!-- (4) -->
     </root>
+
+    <!-- omitted -->
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
  .. list-table::
@@ -892,11 +906,23 @@ Add to bean definition, the class (\ ``SystemExceptionResolver``\ )  used for ha
 - **spring-mvc.xml**
 
  .. code-block:: xml
-    :emphasize-lines: 3-4,6-7,15,23-24,29
+    :emphasize-lines: 7,14-16,18-19,27,35-36
+
+    <!-- omitted -->
+
+    <!-- Settings View Resolver. -->
+    <mvc:view-resolvers>
+        <mvc:bean-name />
+        <mvc:tiles />
+        <mvc:jsp prefix="/WEB-INF/views/" /> <!-- (8) -->
+    </mvc:view-resolvers>
+
+    <!-- omitted -->
 
     <!-- Setting Exception Handling. -->
     <!-- Exception Resolver. -->
-    <bean class="org.terasoluna.gfw.web.exception.SystemExceptionResolver"> <!-- (1) -->
+    <bean  id="systemExceptionResolver"
+        class="org.terasoluna.gfw.web.exception.SystemExceptionResolver"> <!-- (1) -->
         <property name="exceptionCodeResolver" ref="exceptionCodeResolver" /> <!-- (2) -->
         <!-- Setting and Customization by project. -->
         <property name="order" value="3" /> <!-- (3) -->
@@ -920,10 +946,7 @@ Add to bean definition, the class (\ ``SystemExceptionResolver``\ )  used for ha
         <property name="defaultStatusCode" value="500" /> <!-- (7) -->
     </bean>
 
-    <!-- Settings View Resolver. -->
-    <mvc:view-resolvers>
-        <mvc:jsp prefix="/WEB-INF/views/" /> <!-- (8) -->
-    </mvc:view-resolvers>
+    <!-- omitted -->
 
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|

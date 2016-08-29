@@ -648,13 +648,21 @@ Settings for enabling pagination functionality of Spring Data
 
  .. code-block:: xml
 
+    <!-- omitted -->
+
     <mvc:annotation-driven>
         <mvc:argument-resolvers>
             <!-- (1) -->
             <bean
                 class="org.springframework.data.web.PageableHandlerMethodArgumentResolver" />
+            <bean
+                class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver" />
         </mvc:argument-resolvers>
+        <!-- workarround to CVE-2016-5007. -->
+        <mvc:path-matching path-matcher="pathMatcher" />
     </mvc:annotation-driven>
+
+    <!-- omitted -->
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
  .. list-table::

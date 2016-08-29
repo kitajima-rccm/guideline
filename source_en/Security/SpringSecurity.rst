@@ -385,15 +385,14 @@ XML file is created as below to define a bean for the component of Spring Securi
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns:sec="http://www.springframework.org/schema/security"
-           xsi:schemaLocation="
-            http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/security
-            http://www.springframework.org/schema/security/spring-security.xsd
-           "> <!-- (1) -->
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:sec="http://www.springframework.org/schema/security"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        "> <!-- (1) -->
 
+        <sec:http pattern="/resources/**" security="none"/>
         <sec:http> <!-- (2) -->
             <sec:form-login /> <!-- (3) -->
             <sec:logout /> <!-- (4) -->
@@ -409,7 +408,6 @@ XML file is created as below to define a bean for the component of Spring Securi
         </bean>
 
         <bean id="userIdMDCPutFilter" class="org.terasoluna.gfw.security.web.logging.UserIdMDCPutFilter">  <!-- (10) -->
-            <!-- omitted -->
         </bean>
 
     </beans>
