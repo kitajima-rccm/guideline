@@ -730,7 +730,6 @@ spring-mvc-rest.xmlの作成
             <property name="suffix" value=".jsp" />
             <property name="order" value="2" />
         </bean>
-        
 
         <bean
             class="org.springframework.web.servlet.view.tiles2.TilesViewResolver">
@@ -1886,7 +1885,11 @@ DELETE Todoの実装
  | 本チュートリアルでは、\ ``TodoResource``\クラスで使用しているルール(\ ``@NotNull``\と\ ``@Size``\)に対応するメッセージのみ定義する。
 
  .. code-block:: properties
-    :emphasize-lines: 1-2
+    :emphasize-lines: 5-6
+
+    # this file contains the default messages of JSR 303 bean validation for validations provided in the common library
+
+    org.terasoluna.gfw.common.codelist.ExistInCodeList = Does not exist in {codeListId}
 
     javax.validation.constraints.NotNull.message = {0} may not be null.
     javax.validation.constraints.Size.message    = {0} size must be between {min} and {max}.
