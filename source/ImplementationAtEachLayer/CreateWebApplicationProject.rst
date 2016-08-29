@@ -260,8 +260,8 @@ Maven Archetypeで作成したプロジェクトのPOMファイルでは、
 
     <!-- ... -->
 
-    <name>TERASOLUNA Server Framework for Java (5.x) Web Blank Multi Project</name>
-    <description>Web Blank Multi Project using TERASOLUNA Server Framework for Java (5.x)</description>
+    <name>TERASOLUNA Server Framework for Java (5.x) Web Blank Multi Project (MyBatis3)</name>
+    <description>Web Blank Multi Project (MyBatis3) using TERASOLUNA Server Framework for Java (5.x)</description>
     <url>http://terasoluna.org</url>
     <inceptionYear>2014</inceptionYear>
     <licenses>
