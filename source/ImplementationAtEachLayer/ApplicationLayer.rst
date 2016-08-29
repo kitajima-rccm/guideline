@@ -1732,12 +1732,13 @@ HTMLを応答する
 - spring-mvc.xml
 
  .. code-block:: xml
-    :emphasize-lines: 2-4
+    :emphasize-lines: 3-5
 
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <bean id="viewResolver
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/views/" /> <!-- (1) -->
         <property name="suffix" value=".jsp" /> <!-- (2) -->
-        <property name="order" value="1" /> <!-- (3) -->
+        <property name="order" value="2" /> <!-- (3) -->
     </bean>
 
 - SampleController.java

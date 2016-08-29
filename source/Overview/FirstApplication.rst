@@ -120,7 +120,7 @@ Package Explorerに、次のようなプロジェクトが生成される。
 Spring MVCの設定方法を理解するために、生成されたSpring MVCの設定ファイル(src/main/resources/META-INF/spring/spring-mvc.xml)について、簡単に説明する。
 
 .. code-block:: xml
-    :emphasize-lines: 15-16, 27-28, 68-74 
+    :emphasize-lines: 15-16, 27-28, 68-75 
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
@@ -195,13 +195,32 @@ Spring MVCの設定方法を理解するために、生成されたSpring MVCの
             class="org.springframework.web.servlet.view.InternalResourceViewResolver">
             <property name="prefix" value="/WEB-INF/views/" />
             <property name="suffix" value=".jsp" />
+            <property name="order" value="2" />
         </bean>
-    
+
+        <bean
+            class="org.springframework.web.servlet.view.tiles2.TilesViewResolver">
+            <property name="order" value="1" />
+        </bean>
+        
+        <bean class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+            <property name="definitions">
+                <list>
+                    <value>/WEB-INF/tiles/tiles-definitions.xml</value>
+                </list>
+            </property>
+        </bean>
+        
+        <bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+            <property name="order" value="0" />
+        </bean>
+    	
         <bean id="requestDataValueProcessor"
             class="org.terasoluna.gfw.web.mvc.support.CompositeRequestDataValueProcessor">
             <constructor-arg>
                 <util:list>
-                    <bean class="org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor" factory-method="create" />
+                    <bean
+                        class="org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor" factory-method="create" />
                     <bean
                         class="org.terasoluna.gfw.web.token.transaction.TransactionTokenRequestDataValueProcessor" />
                 </util:list>
