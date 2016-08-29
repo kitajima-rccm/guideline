@@ -360,17 +360,16 @@ web.xmlの修正
 | ``src/main/webapp/WEB-INF/web.xml``
 
 .. code-block:: xml
-    :emphasize-lines: 74-84,85-90
+    :emphasize-lines: 77-87,89-93
 
     <?xml version="1.0" encoding="UTF-8"?>
-    <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    <web-app xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
         version="3.0">
+
         <listener>
             <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-        </listener>
-        <listener>
-            <listener-class>org.terasoluna.gfw.web.logging.HttpSessionEventLoggingListener</listener-class>
         </listener>
         <context-param>
             <param-name>contextConfigLocation</param-name>
@@ -380,7 +379,11 @@ web.xmlの修正
                 classpath*:META-INF/spring/spring-security.xml
             </param-value>
         </context-param>
-    
+
+        <listener>
+            <listener-class>org.terasoluna.gfw.web.logging.HttpSessionEventLoggingListener</listener-class>
+        </listener>
+
         <filter>
             <filter-name>MDCClearFilter</filter-name>
             <filter-class>org.terasoluna.gfw.web.logging.mdc.MDCClearFilter</filter-class>
@@ -389,7 +392,7 @@ web.xmlの修正
             <filter-name>MDCClearFilter</filter-name>
             <url-pattern>/*</url-pattern>
         </filter-mapping>
-    
+
         <filter>
             <filter-name>exceptionLoggingFilter</filter-name>
             <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -398,7 +401,7 @@ web.xmlの修正
             <filter-name>exceptionLoggingFilter</filter-name>
             <url-pattern>/*</url-pattern>
         </filter-mapping>
-    
+
         <filter>
             <filter-name>XTrackMDCPutFilter</filter-name>
             <filter-class>org.terasoluna.gfw.web.logging.mdc.XTrackMDCPutFilter</filter-class>
@@ -407,7 +410,7 @@ web.xmlの修正
             <filter-name>XTrackMDCPutFilter</filter-name>
             <url-pattern>/*</url-pattern>
         </filter-mapping>
-    
+
         <filter>
             <filter-name>CharacterEncodingFilter</filter-name>
             <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -446,13 +449,13 @@ web.xmlの修正
             </init-param>
             <load-on-startup>1</load-on-startup>
         </servlet>
-    
+
         <!-- (2) -->
         <servlet-mapping>
             <servlet-name>restApiServlet</servlet-name>
             <url-pattern>/api/v1/*</url-pattern>
         </servlet-mapping>
-    
+
         <servlet>
             <servlet-name>appServlet</servlet-name>
             <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -463,12 +466,11 @@ web.xmlの修正
             </init-param>
             <load-on-startup>1</load-on-startup>
         </servlet>
-    
         <servlet-mapping>
             <servlet-name>appServlet</servlet-name>
             <url-pattern>/</url-pattern>
         </servlet-mapping>
-    
+
         <jsp-config>
             <jsp-property-group>
                 <url-pattern>*.jsp</url-pattern>
@@ -478,25 +480,32 @@ web.xmlの修正
                 <include-prelude>/WEB-INF/views/common/include.jsp</include-prelude>
             </jsp-property-group>
         </jsp-config>
-    
+
         <error-page>
             <error-code>500</error-code>
             <location>/WEB-INF/views/common/error/systemError.jsp</location>
         </error-page>
+
         <error-page>
             <error-code>404</error-code>
             <location>/WEB-INF/views/common/error/resourceNotFoundError.jsp</location>
         </error-page>
+
         <error-page>
             <exception-type>java.lang.Exception</exception-type>
             <location>/WEB-INF/views/common/error/unhandledSystemError.html</location>
         </error-page>
-    
+
         <session-config>
             <!-- 30min -->
             <session-timeout>30</session-timeout>
+            <cookie-config>
+                <http-only>true</http-only>
+                <!-- <secure>true</secure> -->
+            </cookie-config>
+            <tracking-mode>COOKIE</tracking-mode>
         </session-config>
-    
+
     </web-app>
 
 
@@ -528,12 +537,14 @@ spring-mvc-rest.xmlの作成
 ``src/main/resources/META-INF/spring/spring-mvc-rest.xml``
 
 .. code-block:: xml
-    :emphasize-lines: 22-36,41
+    :emphasize-lines: 24-38,45
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-        xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xmlns:util="http://www.springframework.org/schema/util"
         xmlns:aop="http://www.springframework.org/schema/aop"
         xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -566,6 +577,8 @@ spring-mvc-rest.xmlの作成
                     </property>
                 </bean>
             </mvc:message-converters>
+            <!-- workarround to CVE-2016-5007. -->
+            <mvc:path-matching path-matcher="pathMatcher" />
         </mvc:annotation-driven>
 
         <mvc:default-servlet-handler />
@@ -580,6 +593,21 @@ spring-mvc-rest.xmlの作成
                 <bean
                     class="org.terasoluna.gfw.web.logging.TraceLoggingInterceptor" />
             </mvc:interceptor>
+            <mvc:interceptor>
+                <mvc:mapping path="/**" />
+                <mvc:exclude-mapping path="/resources/**" />
+                <mvc:exclude-mapping path="/**/*.html" />
+                <bean
+                    class="org.terasoluna.gfw.web.token.transaction.TransactionTokenInterceptor" />
+            </mvc:interceptor>
+            <mvc:interceptor>
+                <mvc:mapping path="/**" />
+                <mvc:exclude-mapping path="/resources/**" />
+                <mvc:exclude-mapping path="/**/*.html" />
+                <bean class="org.terasoluna.gfw.web.codelist.CodeListInterceptor">
+                    <property name="codeListIdPattern" value="CL_.+" />
+                </bean>
+            </mvc:interceptor>
             <!--  REMOVE THIS LINE IF YOU USE JPA
             <mvc:interceptor>
                 <mvc:mapping path="/**" />
@@ -591,6 +619,56 @@ spring-mvc-rest.xmlの作成
                 REMOVE THIS LINE IF YOU USE JPA  -->
         </mvc:interceptors>
 
+        <!-- Settings View Resolver. -->
+        <mvc:view-resolvers>
+            <mvc:bean-name />
+            <mvc:tiles />
+            <mvc:jsp prefix="/WEB-INF/views/" />
+        </mvc:view-resolvers>
+        
+        <mvc:tiles-configurer>
+            <mvc:definitions location="/WEB-INF/tiles/tiles-definitions.xml" />
+        </mvc:tiles-configurer>
+        
+        <bean id="requestDataValueProcessor"
+            class="org.terasoluna.gfw.web.mvc.support.CompositeRequestDataValueProcessor">
+            <constructor-arg>
+                <util:list>
+                    <bean
+                        class="org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor" />
+                    <bean
+                        class="org.terasoluna.gfw.web.token.transaction.TransactionTokenRequestDataValueProcessor" />
+                </util:list>
+            </constructor-arg>
+        </bean>
+        
+        <!-- Setting Exception Handling. -->
+        <!-- Exception Resolver. -->
+        <bean id="systemExceptionResolver"
+            class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
+            <property name="exceptionCodeResolver" ref="exceptionCodeResolver" />
+            <!-- Setting and Customization by project. -->
+            <property name="order" value="3" />
+            <property name="exceptionMappings">
+                <map>
+                    <entry key="ResourceNotFoundException" value="common/error/resourceNotFoundError" />
+                    <entry key="BusinessException" value="common/error/businessError" />
+                    <entry key="InvalidTransactionTokenException" value="common/error/transactionTokenError" />
+                    <entry key=".DataAccessException" value="common/error/dataAccessError" />
+                </map>
+            </property>
+            <property name="statusCodes">
+                <map>
+                    <entry key="common/error/resourceNotFoundError" value="404" />
+                    <entry key="common/error/businessError" value="409" />
+                    <entry key="common/error/transactionTokenError" value="409" />
+                    <entry key="common/error/dataAccessError" value="500" />
+                </map>
+            </property>
+            <property name="defaultErrorView" value="common/error/systemError" />
+            <property name="defaultStatusCode" value="500" />
+        </bean>
+
         <!-- Setting AOP. -->
         <bean id="handlerExceptionResolverLoggingInterceptor"
             class="org.terasoluna.gfw.web.exception.HandlerExceptionResolverLoggingInterceptor">
@@ -600,6 +678,11 @@ spring-mvc-rest.xmlの作成
             <aop:advisor advice-ref="handlerExceptionResolverLoggingInterceptor"
                 pointcut="execution(* org.springframework.web.servlet.HandlerExceptionResolver.resolveException(..))" />
         </aop:config>
+
+        <!-- Setting PathMatcher. -->
+        <bean id="pathMatcher" class="org.springframework.util.AntPathMatcher">
+            <property name="trimTokens" value="false" />
+        </bean>
 
     </beans>
 
@@ -642,15 +725,16 @@ REST API用のSpring Securityの定義追加
 | ``src/main/resources/META-INF/spring/spring-security.xml``
 
 .. code-block:: xml
-    :emphasize-lines: 11-12
+    :emphasize-lines: 12-13
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sec="http://www.springframework.org/schema/security"
-        xmlns:context="http://www.springframework.org/schema/context"
-        xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:sec="http://www.springframework.org/schema/security"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+        ">
 
         <sec:http pattern="/resources/**" security="none"/>
 
@@ -665,9 +749,9 @@ REST API用のSpring Securityの定義追加
             <sec:session-management />
         </sec:http>
 
-        <sec:authentication-manager></sec:authentication-manager>
+        <sec:authentication-manager />
 
-        <!-- Change View for CSRF or AccessDenied -->
+        <!-- CSRF Protection -->
         <bean id="accessDeniedHandler"
             class="org.springframework.security.web.access.DelegatingAccessDeniedHandler">
             <constructor-arg index="0">
@@ -1713,6 +1797,16 @@ DELETE Todoの実装
 ``src/main/resources/ValidationMessages.properties``
 
 .. code-block:: properties
+
+    # this file contains the default messages of JSR 303 bean validation for validations provided in the common library
+
+    org.terasoluna.gfw.common.codelist.ExistInCodeList.message = Does not exist in {codeListId}
+
+    org.terasoluna.gfw.common.codepoints.ConsistOf.message = not consist of specified code points
+
+    org.terasoluna.gfw.common.validator.constraints.ByteMin.message = must be greater than or equal to {value} bytes
+    org.terasoluna.gfw.common.validator.constraints.ByteMax.message = must be less than or equal to {value} bytes
+    org.terasoluna.gfw.common.validator.constraints.Compare.message = invalid combination of {left} and {right}
 
     javax.validation.constraints.NotNull.message = {0} may not be null.
     javax.validation.constraints.Size.message    = {0} size must be between {min} and {max}.
