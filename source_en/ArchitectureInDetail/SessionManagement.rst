@@ -717,7 +717,8 @@ Following are the settings to handle \ ``HttpSessionRequiredException``\  as cli
 
  .. code-block:: xml
 
-    <bean class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
+    <bean id="systemExceptionResolver"
+        class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
         <property name="exceptionCodeResolver" ref="exceptionCodeResolver" />
         <!-- ... -->
         <property name="exceptionMappings">
@@ -1918,7 +1919,8 @@ Example of implementation is as follows:
 
  .. code-block:: xml
 
-    <bean class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
+    <bean id="systemExceptionResolver"
+        class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
         <property name="exceptionCodeResolver" ref="exceptionCodeResolver" />
         <!-- ... -->
         <property name="exceptionMappings">

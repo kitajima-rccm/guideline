@@ -5819,10 +5819,10 @@ RESTful Web Service向けのリクエストに対して、CSRF対策の処理が
     </sec:http>
 
     <sec:http>
-        <sec:access-denied-handler ref="accessDeniedHandler"/>
-        <sec:custom-filter ref="userIdMDCPutFilter" after="ANONYMOUS_FILTER"/>
         <sec:form-login/>
         <sec:logout/>
+        <sec:access-denied-handler ref="accessDeniedHandler"/>
+        <sec:custom-filter ref="userIdMDCPutFilter" after="ANONYMOUS_FILTER"/>
         <sec:session-management />
     </sec:http>
 
@@ -7195,16 +7195,21 @@ mybatis-config.xml
 .. code-block:: xml
 
     <?xml version="1.0" encoding="UTF-8" ?>
-    <!DOCTYPE configuration PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+    <!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
 
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
-            <setting name="jdbcTypeForNull" value="NULL" />
             <setting name="mapUnderscoreToCamelCase" value="true" />
+            <!-- omitted -->
+            <setting name="jdbcTypeForNull" value="NULL" />
+            <!-- omitted -->
         </settings>
 
         <typeAliases>
+            <!-- omitted -->
             <package name="org.terasoluna.examples.infra.mybatis.typehandler" />
         </typeAliases>
 

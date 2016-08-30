@@ -885,27 +885,30 @@ In such a case, an implementation class of \ ``AccessDeniedHandler``\  interface
 
 .. code-block:: xml
 
-    <!-- (1) -->
-    <bean id="accessDeniedHandler"
-          class="com.example.web.security.JsonDelegatingAccessDeniedHandler">
-        <constructor-arg>
-            <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
-                <constructor-arg value="/api/**"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg>
-            <bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
-                <property name="errorPage"
-                          value="/WEB-INF/views/common/error/accessDeniedError.jsp"/>
-            </bean>
-        </constructor-arg>
-    </bean>
-
     <sec:http>
         <!-- omitted -->
         <sec:access-denied-handler ref="accessDeniedHandler" />  <!-- (2) -->
         <!-- omitted -->
     </sec:http>
+    <!-- omitted -->
+    
+    <!-- (1) -->
+    <bean id="accessDeniedHandler"
+        class="com.example.web.security.JsonDelegatingAccessDeniedHandler">
+        <constructor-arg>
+            <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+                <constructor-arg value="/api/**"/>
+            </bean>
+        </constructor-arg>
+        <!-- omitted -->
+        <constructor-arg index="1">
+            <bean
+                class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+                <property name="errorPage"
+                    value="/WEB-INF/views/common/error/accessDeniedError.jsp" />
+            </bean>
+        </constructor-arg>
+    </bean>
 
 .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
 .. list-table::

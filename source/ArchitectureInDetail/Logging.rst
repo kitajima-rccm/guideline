@@ -727,6 +727,8 @@ web.xmlのfilter定義にMDCFilterの定義を追加する。
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <!-- omitted -->
+
     <!-- (2) -->
     <filter>
         <filter-name>XTrackMDCPutFilter</filter-name>
@@ -821,6 +823,8 @@ logback.xmlの\ ``<pattern>``\ に\ ``%X{X-Track}``\ および、\ ``%X{USER}``\
                  <!-- omitted -->
              </sec:http>
 
+             <!-- omitted -->
+
              <!-- (2) -->
              <bean id="userIdMDCPutFilter" class="org.terasoluna.gfw.security.web.logging.UserIdMDCPutFilter">
              </bean>
@@ -858,9 +862,12 @@ web.xmlに、以下を追加すればよい。
 .. code-block:: xml
 
     <?xml version="1.0" encoding="UTF-8"?>
-    <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    <web-app xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
         version="3.0">
+        <!-- omitted -->
+
         <listener>
             <listener-class>org.terasoluna.gfw.web.logging.HttpSessionEventLoggingListener</listener-class>
         </listener>
@@ -900,10 +907,10 @@ spring-mvc.xmlの\ ``<mvc:interceptors>``\ 内に以下のように\ ``TraceLogg
 .. code-block:: xml
 
     <mvc:interceptors>
-        <!-- omitted -->
         <mvc:interceptor>
             <mvc:mapping path="/**" />
             <mvc:exclude-mapping path="/resources/**" />
+            <mvc:exclude-mapping path="/**/*.html" />
             <bean
                 class="org.terasoluna.gfw.web.logging.TraceLoggingInterceptor">
             </bean>
@@ -920,10 +927,10 @@ spring-mvc.xmlの\ ``<mvc:interceptors>``\ 内に以下のように\ ``TraceLogg
     :emphasize-lines: 8
 
     <mvc:interceptors>
-        <!-- omitted -->
         <mvc:interceptor>
             <mvc:mapping path="/**" />
             <mvc:exclude-mapping path="/resources/**" />
+            <mvc:exclude-mapping path="/**/*.html" />
             <bean
                 class="org.terasoluna.gfw.web.logging.TraceLoggingInterceptor">
                 <property name="warnHandlingNanos" value="#{10 * 1000 * 1000 * 1000}" />

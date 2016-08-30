@@ -725,6 +725,8 @@ Definition of MDCFilter is added to the filter definition of web.xml.
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <!-- omitted -->
+
     <!-- (2) -->
     <filter>
         <filter-name>XTrackMDCPutFilter</filter-name>
@@ -819,6 +821,8 @@ Example of log output
                  <!-- omitted -->
              </sec:http>
 
+             <!-- omitted -->
+
              <!-- (2) -->
              <bean id="userIdMDCPutFilter" class="org.terasoluna.gfw.security.web.logging.UserIdMDCPutFilter">
              </bean>
@@ -856,9 +860,12 @@ The following should be added to web.xml.
 .. code-block:: xml
 
     <?xml version="1.0" encoding="UTF-8"?>
-    <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    <web-app xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
         version="3.0">
+        <!-- omitted -->
+
         <listener>
             <listener-class>org.terasoluna.gfw.web.logging.HttpSessionEventLoggingListener</listener-class>
         </listener>
@@ -898,10 +905,10 @@ When the process is terminated, View name returned by the Controller, attributes
 .. code-block:: xml
 
     <mvc:interceptors>
-        <!-- omitted -->
         <mvc:interceptor>
             <mvc:mapping path="/**" />
             <mvc:exclude-mapping path="/resources/**" />
+            <mvc:exclude-mapping path="/**/*.html" />
             <bean
                 class="org.terasoluna.gfw.web.logging.TraceLoggingInterceptor">
             </bean>
@@ -918,10 +925,10 @@ The following settings should be performed if the threshold value is to be chang
     :emphasize-lines: 8
 
     <mvc:interceptors>
-        <!-- omitted -->
         <mvc:interceptor>
             <mvc:mapping path="/**" />
             <mvc:exclude-mapping path="/resources/**" />
+            <mvc:exclude-mapping path="/**/*.html" />
             <bean
                 class="org.terasoluna.gfw.web.logging.TraceLoggingInterceptor">
                 <property name="warnHandlingNanos" value="#{10 * 1000 * 1000 * 1000}" />

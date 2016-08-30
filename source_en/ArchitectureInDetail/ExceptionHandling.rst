@@ -681,7 +681,7 @@ Common Settings
 - **applicationContext.xml**
 
  .. code-block:: xml
-    :emphasize-lines: 3,5,11,16-17
+    :emphasize-lines: 3,5,13,18-19
 
     <!-- Exception Code Resolver. -->
     <bean id="exceptionCodeResolver"
@@ -690,7 +690,9 @@ Common Settings
         <property name="exceptionMappings"> <!-- (2) -->
             <map>
                 <entry key="ResourceNotFoundException" value="e.xx.fw.5001" />
+                <entry key="InvalidTransactionTokenException" value="e.xx.fw.7001" />
                 <entry key="BusinessException" value="e.xx.fw.8001" />
+                <entry key=".DataAccessException" value="e.xx.fw.9002" />
             </map>
         </property>
         <property name="defaultExceptionCode" value="e.xx.fw.9001" /> <!-- (3) -->
@@ -746,7 +748,7 @@ Common Settings
  Add log definition for monitoring log.
 
  .. code-block:: xml
-    :emphasize-lines: 1,13-15
+    :emphasize-lines: 1,15-17
 
     <appender name="MONITORING_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> <!-- (1) -->
         <file>${app.log.dir:-log}/projectName-monitoring.log</file>
@@ -759,6 +761,8 @@ Common Settings
             <pattern><![CDATA[date:%d{yyyy-MM-dd HH:mm:ss}\tX-Track:%X{X-Track}\tlevel:%-5level\tmessage:%msg%n]]></pattern>
         </encoder>
     </appender>
+
+    <!-- omitted -->
 
     <logger name="org.terasoluna.gfw.common.exception.ExceptionLogger.Monitoring" additivity="false"> <!-- (2) -->
         <level value="error" /> <!-- (3) -->
@@ -793,7 +797,7 @@ Common Settings
  Add log definition for application log.
 
  .. code-block:: xml
-    :emphasize-lines: 1,13
+    :emphasize-lines: 1,15-16,23
 
     <appender name="APPLICATION_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> <!-- (1) -->
         <file>${app.log.dir:-log}/projectName-application.log</file>
@@ -807,9 +811,13 @@ Common Settings
         </encoder>
     </appender>
 
+    <!-- omitted -->
+
     <logger name="org.terasoluna.gfw.common.exception.ExceptionLogger"> <!-- (2) -->
         <level value="info" /> <!-- (3) -->
     </logger>
+
+    <!-- omitted -->
 
     <root level="warn">
         <appender-ref ref="STDOUT" />
@@ -853,15 +861,13 @@ When exceptions (BusinessException,ResourceNotFoundException) holding ResultMess
 .. _exception-handling-how-to-use-service-pointcut-aop-label:
 
  .. code-block:: xml
-    :emphasize-lines: 3,4,10
+    :emphasize-lines: 3,4,8
 
-    <!-- interceptor bean. -->
+    <!-- AOP. -->
     <bean id="resultMessagesLoggingInterceptor"
-          class="org.terasoluna.gfw.common.exception.ResultMessagesLoggingInterceptor"> <!-- (1) -->
+        class="org.terasoluna.gfw.common.exception.ResultMessagesLoggingInterceptor"> <!-- (1) -->
           <property name="exceptionLogger" ref="exceptionLogger" /> <!-- (2) -->
     </bean>
-
-    <!-- setting AOP. -->
     <aop:config>
         <aop:advisor advice-ref="resultMessagesLoggingInterceptor"
                      pointcut="@within(org.springframework.stereotype.Service)" /> <!-- (3) -->
@@ -892,11 +898,19 @@ Add to bean definition, the class (\ ``SystemExceptionResolver``\ )  used for ha
 - **spring-mvc.xml**
 
  .. code-block:: xml
-    :emphasize-lines: 3-4,6-7,15,23-24,29
+    :emphasize-lines: 3,10-12,14-15,23,31-32
 
+    <!-- Settings View Resolver. -->
+    <mvc:view-resolvers>
+        <mvc:jsp prefix="/WEB-INF/views/" /> <!-- (8) -->
+    </mvc:view-resolvers>
+    
+    <!-- omitted -->
+    
     <!-- Setting Exception Handling. -->
     <!-- Exception Resolver. -->
-    <bean class="org.terasoluna.gfw.web.exception.SystemExceptionResolver"> <!-- (1) -->
+    <bean id="systemExceptionResolver"
+        class="org.terasoluna.gfw.web.exception.SystemExceptionResolver"> <!-- (1) -->
         <property name="exceptionCodeResolver" ref="exceptionCodeResolver" /> <!-- (2) -->
         <!-- Setting and Customization by project. -->
         <property name="order" value="3" /> <!-- (3) -->
@@ -919,11 +933,6 @@ Add to bean definition, the class (\ ``SystemExceptionResolver``\ )  used for ha
         <property name="defaultErrorView" value="common/error/systemError" /> <!-- (6) -->
         <property name="defaultStatusCode" value="500" /> <!-- (7) -->
     </bean>
-
-    <!-- Settings View Resolver. -->
-    <mvc:view-resolvers>
-        <mvc:jsp prefix="/WEB-INF/views/" /> <!-- (8) -->
-    </mvc:view-resolvers>
 
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|
@@ -1131,6 +1140,7 @@ Add error-page definition for Servlet Container in order to handle error respons
  .. code-block:: xml
 
     <error-page>
+        <exception-type>java.lang.Exception</exception-type>
         <!-- (3) -->
         <location>/WEB-INF/views/common/error/unhandledSystemError.html</location>
     </error-page>
@@ -1909,7 +1919,8 @@ Attribute name of result message
 
   .. code-block:: xml
 
-    <bean class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
+    <bean id="systemExceptionResolver"
+        class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
 
         <!-- omitted -->
 
@@ -1946,7 +1957,8 @@ Attribute name of exception code (message ID)
 
   .. code-block:: xml
 
-    <bean class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
+    <bean id="systemExceptionResolver"
+        class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
 
         <!-- omitted -->
 
@@ -1990,7 +2002,8 @@ Header name of exception code (message ID)
 
   .. code-block:: xml
 
-    <bean class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
+    <bean id="systemExceptionResolver"
+        class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
 
         <!-- omitted -->
 
@@ -2019,7 +2032,8 @@ Attribute name of exception object
 
   .. code-block:: xml
 
-    <bean class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
+    <bean id="systemExceptionResolver"
+        class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
 
         <!-- omitted -->
 
@@ -2057,7 +2071,8 @@ Cache control flag of HTTP response
 
   .. code-block:: xml
 
-    <bean class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
+    <bean id="systemExceptionResolver"
+        class="org.terasoluna.gfw.web.exception.SystemExceptionResolver">
 
         <!-- omitted -->
 

@@ -398,24 +398,29 @@ pom.xml settings
 | When a project is generated from a blank project <https://github.com/terasolunaorg/terasoluna-gfw-web-multi-blank#multi-blank-project-with-mybatis3>`_ \  for MyBatis3, dependency relation with terasoluna-gfw-mybatis3 is already configured.
 
  .. code-block:: xml
-    :emphasize-lines: 22-26
+    :emphasize-lines: 27-31
 
     <?xml version="1.0" encoding="UTF-8"?>
-    <project xmlns="http://maven.apache.org/POM/4.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-            http://maven.apache.org/maven-v4_0_0.xsd">
-
+    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
         <modelVersion>4.0.0</modelVersion>
         <artifactId>projectName-domain</artifactId>
         <packaging>jar</packaging>
-
         <parent>
             <groupId>com.example</groupId>
             <artifactId>mybatis3-example-app</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>5.0.3-SNAPSHOT</version>
             <relativePath>../pom.xml</relativePath>
         </parent>
+        
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </build>
 
         <dependencies>
         
@@ -499,19 +504,15 @@ Configuration example is as given below.
 - :file:`projectName-env/src/main/resources/META-INF/spring/projectName-env.xml`
 
  .. code-block:: xml
-    :emphasize-lines: 15-20
+    :emphasize-lines: 11-16
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:jee="http://www.springframework.org/schema/jee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
         xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-        xsi:schemaLocation="http://www.springframework.org/schema/jdbc
-            http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-            http://www.springframework.org/schema/jee
-            http://www.springframework.org/schema/jee/spring-jee.xsd
-            http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd">
+        xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+            http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
         <!-- omitted -->
 
@@ -559,22 +560,17 @@ Configuration example is as given below.
 - :file:`projectName-env/src/main/resources/META-INF/spring/projectName-env.xml`
 
  .. code-block:: xml
-    :emphasize-lines: 6,13-14,18-19
+    :emphasize-lines: 5,9,13-14
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:jee="http://www.springframework.org/schema/jee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
         xmlns:jdbc="http://www.springframework.org/schema/jdbc"
         xmlns:tx="http://www.springframework.org/schema/tx"
-        xsi:schemaLocation="http://www.springframework.org/schema/jdbc
-            http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-            http://www.springframework.org/schema/jee
-            http://www.springframework.org/schema/jee/spring-jee.xsd
-            http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/tx
-            http://www.springframework.org/schema/tx/spring-tx.xsd">
+        xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+            http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
         <!-- omitted -->
 
@@ -618,29 +614,30 @@ Configuration example is as given below.
 - :file:`projectName-domain/src/main/resources/META-INF/spring/projectName-infra.xml`
 
  .. code-block:: xml
-    :emphasize-lines: 4,7-8,12-20,22-23
+    :emphasize-lines: 3,8-9,14-20,23-24
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans 
+           xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
             http://mybatis.org/schema/mybatis-spring
             http://mybatis.org/schema/mybatis-spring.xsd">
 
         <import resource="classpath:/META-INF/spring/projectName-env.xml" />
 
+        <!-- define the SqlSessionFactory -->
         <!-- (1) -->
-        <bean id="sqlSessionFactory"
-            class="org.mybatis.spring.SqlSessionFactoryBean">
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
             <!-- (2) -->
             <property name="dataSource" ref="dataSource" />
             <!-- (3) -->
-            <property name="configLocation"
-                value="classpath:/META-INF/mybatis/mybatis-config.xml" />
+            <property name="configLocation" value="classpath:/META-INF/mybatis/mybatis-config.xml" />
         </bean>
 
+        <!-- scan for Mappers -->
         <!-- (4) -->
         <mybatis:scan base-package="com.example.domain.repository" />
 
@@ -736,14 +733,25 @@ How to specify "default \ ``fetchSize``\ " is shown below.
  .. code-block:: xml
 
     <?xml version="1.0" encoding="UTF-8" ?>
-    <!DOCTYPE configuration PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+    <!DOCTYPE configuration
+      PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+      "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
 
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
+            
+            <!-- omitted -->
+            
             <!-- (1) -->
             <setting name="defaultFetchSize" value="100" />
+            
+            <!-- omitted -->
+            
         </settings>
+        
+        <!-- omitted -->
+        
 
     </configuration>
 
@@ -840,17 +848,26 @@ How to configure a TypeAlias is given below.
 - :file:`projectName-domain/src/main/resources/META-INF/mybatis/mybatis-config.xml`
 
  .. code-block:: xml
-    :emphasize-lines: 7-8
+    :emphasize-lines: 10-11
 
     <?xml version="1.0" encoding="UTF-8" ?>
     <!DOCTYPE configuration
       PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
       "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
+
+        <!-- omitted -->
+        
         <typeAliases>
             <!-- (1) -->
             <package name="com.example.domain.model" />
+            
+            <!-- omitted -->
+            
         </typeAliases>
+        
+        <!-- omitted -->
+        
     </configuration>
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.80\linewidth}|
@@ -952,14 +969,24 @@ How to change the default behavior of MyBatis3 is given below.
  .. code-block:: xml
 
     <?xml version="1.0" encoding="UTF-8" ?>
-    <!DOCTYPE configuration PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+    <!DOCTYPE configuration
+      PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+      "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
 
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
+            
+            <!-- omitted -->
+            
             <!-- (1) -->
             <setting name="jdbcTypeForNull" value="NULL" />
+            
+            <!-- omitted -->
+            
         </settings>
+        
+        <!-- omitted -->
 
     </configuration>
 
@@ -1057,10 +1084,13 @@ How to apply a TypeHandler thus created in MyBatis is explained below.
  .. code-block:: xml
 
     <?xml version="1.0" encoding="UTF-8" ?>
-    <!DOCTYPE configuration PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+    <!DOCTYPE configuration
+      PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+      "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
 
+        <!-- omitted -->
+        
         <typeHandlers>
             <!-- (1) -->
             <package name="com.example.infra.mybatis.typehandler" />
@@ -1110,25 +1140,27 @@ How to apply a TypeHandler thus created in MyBatis is explained below.
 
         <?xml version="1.0" encoding="UTF-8"?>
         <beans xmlns="http://www.springframework.org/schema/beans"
-               xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+               xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:schemaLocation="http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/tx
-            http://www.springframework.org/schema/tx/spring-tx.xsd
-            http://mybatis.org/schema/mybatis-spring
-            http://mybatis.org/schema/mybatis-spring.xsd">
+            xsi:schemaLocation="
+                http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://mybatis.org/schema/mybatis-spring
+                http://mybatis.org/schema/mybatis-spring.xsd">
+
+            <!-- omitted -->
 
             <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
                 <property name="dataSource" ref="oracleDataSource" />
-                <property name="configLocation"
-                    value="classpath:/META-INF/mybatis/mybatis-config.xml" />
+                <property name="configLocation" value="classpath:/META-INF/mybatis/mybatis-config.xml" />
                 <property name="typeHandlers">
                     <list>
                         <bean class="xxx.yyy.zzz.CustomTypeHandler" />
                     </list>
                 </property>
             </bean>
+
+            <!-- omitted -->
 
         </beans>
 
@@ -1544,7 +1576,7 @@ by adding following settings to MyBatis configuration file (\ :file:`mybatis-con
 - :file:`projectName-domain/src/main/resources/META-INF/mybatis/mybatis-config.xml`
 
  .. code-block:: xml
-    :emphasize-lines: 8-9
+    :emphasize-lines: 9-10
 
     <?xml version="1.0" encoding="UTF-8" ?>
     <!DOCTYPE configuration
@@ -1552,10 +1584,16 @@ by adding following settings to MyBatis configuration file (\ :file:`mybatis-con
       "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
 
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
             <!-- (3) -->
             <setting name="mapUnderscoreToCamelCase" value="true" />
+            
+            <!-- omitted -->
+            
         </settings>
+        
+        <!-- omitted -->
 
     </configuration>
 
@@ -1743,9 +1781,15 @@ The explanation below is the example wherein a setting is enabled to automatical
       "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
 
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
             <setting name="mapUnderscoreToCamelCase" value="true" />
+            
+            <!-- omitted -->
+            
         </settings>
+        
+        <!-- omitted -->
 
     </configuration>
 
@@ -4696,11 +4740,12 @@ How to use a substitution variable is described below.
       .. code-block:: xml
 
         <?xml version="1.0" encoding="UTF-8"?>
-        <beans xmlns="http://www.springframework.org/schema/beans"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd">
+        <beans  xmlns="http://www.springframework.org/schema/beans"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+            <!-- omitted -->
+            
             <bean id="CL_DIRECTION" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
                 <property name="map">
                     <map>
@@ -5377,13 +5422,24 @@ How to change the execution mode from default (\ ``SIMPLE``\ ) to \ ``REUSE``\  
 
     <?xml version="1.0" encoding="UTF-8" ?>
     <!DOCTYPE configuration
-            PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-            "http://mybatis.org/dtd/mybatis-3-config.dtd">
+      PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+      "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
+
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
+            
+            <!-- omitted -->
+            
             <!-- (1) -->
             <setting name="defaultExecutorType" value="REUSE"/>
+            
+            <!-- omitted -->
+            
         </settings>
+        
+        <!-- omitted -->
+        
     </configuration>
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.80\linewidth}|
@@ -5475,23 +5531,25 @@ in the configuration example below.
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns:context="http://www.springframework.org/schema/context"
            xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
-           xsi:schemaLocation="
-           http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context.xsd
-           http://mybatis.org/schema/mybatis-spring
-           http://mybatis.org/schema/mybatis-spring.xsd">
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://mybatis.org/schema/mybatis-spring
+            http://mybatis.org/schema/mybatis-spring.xsd">
 
-        <bean id="sqlSessionFactory"
-              class="org.mybatis.spring.SqlSessionFactoryBean">
+        <import resource="classpath:/META-INF/spring/projectName-env.xml" />
+        
+        <!-- define the SqlSessionFactory -->
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
             <property name="dataSource" ref="dataSource"/>
-            <property name="configLocation"
-                      value="classpath:META-INF/mybatis/mybatis-config.xml"/>
+            <property name="configLocation" value="classpath:META-INF/mybatis/mybatis-config.xml"/>
         </bean>
+
+        <!-- scan for Mappers -->
+        <mybatis:scan base-package="com.example.domain.repository"
+                      template-ref="sqlSessionTemplate"/> <!-- (2) -->
 
         <!-- (1) -->
         <bean id="sqlSessionTemplate"
@@ -5499,9 +5557,6 @@ in the configuration example below.
             <constructor-arg index="0" ref="sqlSessionFactory"/>
             <constructor-arg index="1" value="REUSE"/>
         </bean>
-
-        <mybatis:scan base-package="com.example.domain.repository"
-                      template-ref="sqlSessionTemplate"/> <!-- (2) -->
 
         <!-- (3) -->
         <bean id="batchSqlSessionTemplate"
@@ -5651,36 +5706,33 @@ In the configuration example below, Bean is registered for the Repositories of \
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns:context="http://www.springframework.org/schema/context"
            xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
-           xsi:schemaLocation="
-           http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context.xsd
-           http://mybatis.org/schema/mybatis-spring
-           http://mybatis.org/schema/mybatis-spring.xsd">
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://mybatis.org/schema/mybatis-spring
+            http://mybatis.org/schema/mybatis-spring.xsd">
 
-        <bean id="sqlSessionFactory"
-              class="org.mybatis.spring.SqlSessionFactoryBean">
+        <import resource="classpath:/META-INF/spring/projectName-env.xml" />
+        
+        <!-- define the SqlSessionFactory -->
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
             <property name="dataSource" ref="dataSource"/>
-            <property name="configLocation"
-                      value="classpath:META-INF/mybatis/mybatis-config.xml"/>
+            <property name="configLocation" value="classpath:META-INF/mybatis/mybatis-config.xml"/>
         </bean>
 
-        <!-- ... -->
+        <!-- scan for Mappers -->
+        <!-- (3) -->
+        <mybatis:scan base-package="com.example.domain.repository"
+            template-ref="batchSqlSessionTemplate"
+            name-generator="com.example.domain.repository.BatchRepositoryBeanNameGenerator"/>
 
         <bean id="batchSqlSessionTemplate"
               class="org.mybatis.spring.SqlSessionTemplate">
             <constructor-arg index="0" ref="sqlSessionFactory"/>
             <constructor-arg index="1" value="BATCH"/>
         </bean>
-
-        <!-- (3) -->
-        <mybatis:scan base-package="com.example.domain.repository"
-            template-ref="batchSqlSessionTemplate"
-            name-generator="com.example.domain.repository.BatchRepositoryBeanNameGenerator"/>
 
     </beans>
 
@@ -6362,6 +6414,9 @@ TypeAlias can also be configured per class.
         <typeAlias
             type="com.example.domain.repository.account.AccountSearchCriteria" />
         <package name="com.example.domain.model" />
+        
+        <!-- omitted -->
+        
     </typeAliases>
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.80\linewidth}|
@@ -6482,14 +6537,13 @@ This mechanism is effective when building an application that can support multip
 
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+           xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="
             http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
             http://mybatis.org/schema/mybatis-spring
-            http://mybatis.org/schema/mybatis-spring.xsd
-        ">
+            http://mybatis.org/schema/mybatis-spring.xsd">
 
         <import resource="classpath:/META-INF/spring/projectName-env.xml" />
 
@@ -6505,15 +6559,15 @@ This mechanism is effective when building an application that can support multip
             </property>
         </bean>
 
-        <bean id="sqlSessionFactory"
-            class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- define the SqlSessionFactory -->
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
             <property name="dataSource" ref="dataSource" />
             <!-- (3) -->
             <property name="databaseIdProvider" ref="databaseIdProvider"/>
-            <property name="configLocation"
-                value="classpath:/META-INF/mybatis/mybatis-config.xml" />
+            <property name="configLocation" value="classpath:/META-INF/mybatis/mybatis-config.xml" />
         </bean>
 
+        <!-- scan for Mappers -->
         <mybatis:scan base-package="com.example.domain.repository" />
 
     </beans>
@@ -8019,13 +8073,24 @@ In MyBatis3, availability of "Lazy Load" can be specified in the 2 locations giv
 
     <?xml version="1.0" encoding="UTF-8" ?>
     <!DOCTYPE configuration
-            PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-            "http://mybatis.org/dtd/mybatis-3-config.dtd">
+      PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+      "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
+
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
+            
+            <!-- omitted -->
+            
             <!-- (1) -->
             <setting name="lazyLoadingEnabled" value="true"/>
+            
+            <!-- omitted -->
+            
         </settings>
+        
+        <!-- omitted -->
+        
     </configuration>
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.80\linewidth}|
@@ -8112,13 +8177,24 @@ specified in MyBatis configuration file (:file:`projectName-domain/src/main/reso
 
     <?xml version="1.0" encoding="UTF-8" ?>
     <!DOCTYPE configuration
-            PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-            "http://mybatis.org/dtd/mybatis-3-config.dtd">
+      PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+      "http://mybatis.org/dtd/mybatis-3-config.dtd">
     <configuration>
+
+        <!-- See http://mybatis.github.io/mybatis-3/configuration.html#settings -->
         <settings>
+            
+            <!-- omitted -->
+            
             <!-- (1) -->
             <setting name="aggressiveLazyLoading" value="false"/>
+            
+            <!-- omitted -->
+            
         </settings>
+        
+        <!-- omitted -->
+        
     </configuration>
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.80\linewidth}|
