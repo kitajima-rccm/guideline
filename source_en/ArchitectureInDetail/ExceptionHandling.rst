@@ -681,7 +681,7 @@ Common Settings
 - **applicationContext.xml**
 
  .. code-block:: xml
-    :emphasize-lines: 3,5,11,16-17
+    :emphasize-lines: 3,5,13,18-19
 
     <!-- Exception Code Resolver. -->
     <bean id="exceptionCodeResolver"
@@ -690,7 +690,9 @@ Common Settings
         <property name="exceptionMappings"> <!-- (2) -->
             <map>
                 <entry key="ResourceNotFoundException" value="e.xx.fw.5001" />
+                <entry key="InvalidTransactionTokenException" value="e.xx.fw.7001" />
                 <entry key="BusinessException" value="e.xx.fw.8001" />
+                <entry key=".DataAccessException" value="e.xx.fw.9002" />
             </map>
         </property>
         <property name="defaultExceptionCode" value="e.xx.fw.9001" /> <!-- (3) -->
@@ -746,7 +748,7 @@ Common Settings
  Add log definition for monitoring log.
 
  .. code-block:: xml
-    :emphasize-lines: 1,13-15
+    :emphasize-lines: 1,15-17
 
     <appender name="MONITORING_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> <!-- (1) -->
         <file>${app.log.dir:-log}/projectName-monitoring.log</file>
@@ -760,6 +762,8 @@ Common Settings
         </encoder>
     </appender>
 
+    <!-- omitted -->
+    
     <logger name="org.terasoluna.gfw.common.exception.ExceptionLogger.Monitoring" additivity="false"> <!-- (2) -->
         <level value="error" /> <!-- (3) -->
         <appender-ref ref="MONITORING_LOG_FILE" /> <!-- (4) -->
@@ -793,7 +797,7 @@ Common Settings
  Add log definition for application log.
 
  .. code-block:: xml
-    :emphasize-lines: 1,13
+    :emphasize-lines: 1,15-16,23
 
     <appender name="APPLICATION_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> <!-- (1) -->
         <file>${app.log.dir:-log}/projectName-application.log</file>
@@ -807,10 +811,14 @@ Common Settings
         </encoder>
     </appender>
 
+    <!-- omitted -->
+    
     <logger name="org.terasoluna.gfw.common.exception.ExceptionLogger"> <!-- (2) -->
         <level value="info" /> <!-- (3) -->
     </logger>
 
+    <!-- omitted -->
+    
     <root level="warn">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="APPLICATION_LOG_FILE" /> <!-- (4) -->
@@ -853,18 +861,16 @@ When exceptions (BusinessException,ResourceNotFoundException) holding ResultMess
 .. _exception-handling-how-to-use-service-pointcut-aop-label:
 
  .. code-block:: xml
-    :emphasize-lines: 3,4,10
+    :emphasize-lines: 3,4,8
 
-    <!-- interceptor bean. -->
+    <!-- AOP. -->
     <bean id="resultMessagesLoggingInterceptor"
-          class="org.terasoluna.gfw.common.exception.ResultMessagesLoggingInterceptor"> <!-- (1) -->
-          <property name="exceptionLogger" ref="exceptionLogger" /> <!-- (2) -->
+        class="org.terasoluna.gfw.common.exception.ResultMessagesLoggingInterceptor"> <!-- (1) -->
+        <property name="exceptionLogger" ref="exceptionLogger" /> <!-- (2) -->
     </bean>
-
-    <!-- setting AOP. -->
     <aop:config>
         <aop:advisor advice-ref="resultMessagesLoggingInterceptor"
-                     pointcut="@within(org.springframework.stereotype.Service)" /> <!-- (3) -->
+            pointcut="@within(org.springframework.stereotype.Service)" /> <!-- (3) -->
     </aop:config>
 
 
@@ -892,8 +898,15 @@ Add to bean definition, the class (\ ``SystemExceptionResolver``\ )  used for ha
 - **spring-mvc.xml**
 
  .. code-block:: xml
-    :emphasize-lines: 3-4,6-7,15,23-24,29
+    :emphasize-lines: 3,10-11,13-14,22,30-31
 
+    <!-- Settings View Resolver. -->
+    <mvc:view-resolvers>
+        <mvc:jsp prefix="/WEB-INF/views/" /> <!-- (8) -->
+    </mvc:view-resolvers>
+    
+    <!-- omitted -->
+    
     <!-- Setting Exception Handling. -->
     <!-- Exception Resolver. -->
     <bean class="org.terasoluna.gfw.web.exception.SystemExceptionResolver"> <!-- (1) -->
@@ -919,11 +932,6 @@ Add to bean definition, the class (\ ``SystemExceptionResolver``\ )  used for ha
         <property name="defaultErrorView" value="common/error/systemError" /> <!-- (6) -->
         <property name="defaultStatusCode" value="500" /> <!-- (7) -->
     </bean>
-
-    <!-- Settings View Resolver. -->
-    <mvc:view-resolvers>
-        <mvc:jsp prefix="/WEB-INF/views/" /> <!-- (8) -->
-    </mvc:view-resolvers>
 
 
  .. tabularcolumns:: |p{0.10\linewidth}|p{0.90\linewidth}|

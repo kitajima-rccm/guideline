@@ -173,18 +173,22 @@ codelist can be set automatically in request scope and can be easily referred fr
 **Definition of Bean definition file(spring-mvc.xml)**
 
 .. code-block:: xml
-   :emphasize-lines: 3,5,6
+   :emphasize-lines: 6,9,10
 
     <mvc:interceptors>
-      <mvc:interceptor>
-        <mvc:mapping path="/**" /> <!-- (1) -->
-        <bean
-          class="org.terasoluna.gfw.web.codelist.CodeListInterceptor"> <!-- (2) -->
-          <property name="codeListIdPattern" value="CL_.+" /> <!-- (3) -->
-        </bean>
-      </mvc:interceptor>
-
-      <!-- omitted -->
+        
+        <!-- omitted -->
+        
+        <mvc:interceptor>
+            <mvc:mapping path="/**" /> <!-- (1) -->
+            <mvc:exclude-mapping path="/resources/**" />
+            <mvc:exclude-mapping path="/**/*.html" />
+            <bean class="org.terasoluna.gfw.web.codelist.CodeListInterceptor"> <!-- (2) -->
+                <property name="codeListIdPattern" value="CL_.+" /> <!-- (3) -->
+            </bean>
+        </mvc:interceptor>
+      
+        <!-- omitted -->
 
     </mvc:interceptors>
 
@@ -990,16 +994,20 @@ Description of basic settings is omitted since it is same as :ref:`Using codelis
 .. code-block:: xml
 
     <mvc:interceptors>
-      <mvc:interceptor>
-        <mvc:mapping path="/**" />
-        <bean
-          class="org.terasoluna.gfw.web.codelist.CodeListInterceptor">
-          <property name="codeListIdPattern" value="CL_.+" />
-          <property name="fallbackTo" value="en" />  <!-- (1) -->
-        </bean>
-      </mvc:interceptor>
+        
+        <!-- omitted -->
+        
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <mvc:exclude-mapping path="/resources/**" />
+            <mvc:exclude-mapping path="/**/*.html" />
+            <bean class="org.terasoluna.gfw.web.codelist.CodeListInterceptor">
+                <property name="codeListIdPattern" value="CL_.+" />
+                <property name="fallbackTo" value="en" />  <!-- (1) -->
+            </bean>
+        </mvc:interceptor>
 
-      <!-- omitted -->
+        <!-- omitted -->
 
     </mvc:interceptors>
 
