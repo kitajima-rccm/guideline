@@ -734,8 +734,7 @@ spring-mvc-rest.xmlの作成
             class="org.terasoluna.gfw.web.mvc.support.CompositeRequestDataValueProcessor">
             <constructor-arg>
                 <util:list>
-                    <bean
-                        class="org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor" factory-method="create" />
+                    <bean class="org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor" factory-method="create" />
                     <bean
                         class="org.terasoluna.gfw.web.token.transaction.TransactionTokenRequestDataValueProcessor" />
                 </util:list>
@@ -775,7 +774,7 @@ spring-mvc-rest.xmlの作成
         <aop:config>
             <aop:advisor advice-ref="handlerExceptionResolverLoggingInterceptor"
                 pointcut="execution(* org.springframework.web.servlet.HandlerExceptionResolver.resolveException(..))" />
-        </aop:config>>
+        </aop:config>
 
         <!-- Setting PathMatcher. -->
         <bean id="pathMatcher" class="org.springframework.util.AntPathMatcher">
@@ -879,6 +878,7 @@ REST API用のSpring Securityの定義追加
     
         <!-- Put UserID into MDC -->
         <bean id="userIdMDCPutFilter" class="org.terasoluna.gfw.security.web.logging.UserIdMDCPutFilter">
+
         </bean>
     
     </beans>
@@ -1816,7 +1816,7 @@ DELETE Todoの実装
  ハイライトした部分のメッセージ定義を追加する。
 
  .. code-block:: properties
-    :emphasize-lines: 30-35
+    :emphasize-lines: 38-33
 
     e.xx.fw.5001 = Resource not found.
 
@@ -1827,8 +1827,6 @@ DELETE Todoの実装
     
     e.xx.fw.9001 = System error occurred!
     e.xx.fw.9002 = Data Access error!
-    
-    title.welcome.home = welcome home
     
     # typemismatch
     typeMismatch="{0}" is invalid.
